@@ -4,10 +4,11 @@ const dotenv = require('dotenv');
 const app = express();
 const cors = require('cors');
 var cookieParser = require('cookie-parser');
+const errorHandler = require('./utils/error');
 
 app.use(cors({
-    origin:["http://localhost:3000", "https://gregarious-raindrop-091940.netlify.app"],
-    methods:['POST','GET','HEAD','PUT','DELETE'],
+    origin: ["http://localhost:3000", "https://gregarious-raindrop-091940.netlify.app"],
+    methods: ['POST', 'GET', 'HEAD', 'PUT', 'DELETE'],
     credentials: true
 }))
 app.use(cookieParser());
@@ -28,7 +29,8 @@ app.use(cookieParser());
 
 // // Routes
 // app.use('/api/user', require('./routes/userRoutes'));
-// app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use(errorHandler);
 // app.use('/api/listing', require('./routes/listingRoutes'));
 
 // Error handling middleware
