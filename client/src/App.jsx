@@ -8,19 +8,20 @@ import Search from './pages/Search';
 import Destinations from './pages/Destinations';
 import PackageDetails from './pages/PackageDetails';
 import Payment from './pages/Payment';
+import './App.css';
 
 function App() {
   return (
     <BrowserRouter>
-      <Header /> {/* Include the Header component */}
+      <Header />
       <Routes>
-        <Route exact path="/" component={Home} />
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={Signup} />
-        <Route path="/search" component={Search} />
-        <Route path="/destination/:destinationId" component={Destinations} />
-        <Route path="/package/:packageId" component={PackageDetails} />
-        <Route path="/payment" component={Payment} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={Signup} />
+        <Route path="/search" element={Search} />
+        <Route path="/destination/:destinationId" element={Destinations} />
+        <Route path="/package/:packageId" element={PackageDetails} />
+        <Route path="/payment" element={Payment} />
       </Routes>
     </BrowserRouter>
   );
