@@ -51,6 +51,6 @@ router.use((req, res, next) => {
 
 // Other authentication routes
 router.post('/google', authController.google);
-router.get('/signout', authController.getSignout);
+router.get('/logout', authController.getSignout);
 
 module.exports = router;

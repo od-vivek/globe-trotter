@@ -1,49 +1,135 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart, signInSuccess, signInFailure, resetError } from '../redux/user/userSlice';
 import logo from '../images/logo.png';
+import app from '../firebase'; // Import your Firebase app instance
+import { GoogleAuthProvider } from 'firebase/auth'; // Import GoogleAuthProvider separately
+import { getAuth, signInWithPopup } from 'firebase/auth'; // Import getAuth and signInWithPopup separately
 
 export default function Login() {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.user);
+
+  // Clear error on component mount
+  useEffect(() => {
+    dispatch(resetError());
+  }, [dispatch]);
+
+  const changeHandler = (event) => {
+    setFormData({
+      ...formData,
+      [event.target.id]: event.target.value,
+    });
+  };
+
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    try {
+      dispatch(signInStart());
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signInFailure(data.message));
+        // You can handle the error here, display a message, etc.
+      } else {
+        dispatch(signInSuccess(data));
+        navigate('/');
+      }
+    } catch (e) {
+      console.error('Error during login:', e);
+      dispatch(signInFailure('An error occurred during login.'));
+      // You can handle the error here, display a message, etc.
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const provider = new GoogleAuthProvider(); // Create a GoogleAuthProvider instance
+      const auth = getAuth(app); // Initialize authentication with the Firebase app
+
+      const result = await signInWithPopup(auth, provider); // Sign in with Google using the authentication instance and the GoogleAuthProvider
+      // console.log(result);
+      const res = await fetch('/api/auth/google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: result.user.displayName,
+          email: result.user.email,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signInFailure(data.message));
+        // You can handle the error here, display a message, etc.
+      } else {
+        dispatch(signInSuccess(data));
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Could not sign in with Google.', error);
+      dispatch(signInFailure('Failed to sign in with Google.'));
+      navigate('/signup');
+    }
+  };
+
   return (
-    <div className='max-w-lg mx-auto p-4 my-10 border border-color3 shadow-md rounded-lg'>
+    <div className='max-w-lg mx-auto p-4 my-10 border border-color3 shadow-md rounded-lg hover:scale-105 transition-transform'>
       <div className='flex flex-col items-center mb-5'>
-        <img
-          alt='logo'
-          src={logo}
-          className='max-h-10'
-        />
-        <span className='font-bold text color4 mt-2 text-2xl text-center'>Login</span>
+        <img alt='logo' src={logo} className='max-h-10' />
+        <span className='font-bold text color3 mt-2 text-2xl text-center'>Login</span>
       </div>
 
-      <form className='flex flex-col gap-5'>
+      <form onSubmit={submitHandler} className='flex flex-col gap-3'>
         <input
           type='text'
           placeholder='Email'
-          className='border p-4 rounded-lg'
+          className='border p-3 rounded-lg'
           id='email'
+          onChange={changeHandler}
         />
         <input
           type='password'
           placeholder='Password'
-          className='border p-4 rounded-lg'
+          className='border p-3 rounded-lg'
           id='password'
+          onChange={changeHandler}
         />
-        <button
-          className='bg-slate-700 text-white p-4 rounded-lg hover:opacity-95 uppercase'
-        >
-          Login
-        </button>
+        <div className='flex flex-col gap-2 mt-3'>
+          <button
+            disabled={loading}
+            className='bg-color4 text-white p-3 rounded-lg hover:opacity-95 uppercase'
+          >
+            {loading ? 'Loading...' : 'Login'}
+          </button>
+          <button
+            onClick={handleGoogleSignIn}
+            className='bg-color3 text-white p-3 rounded-lg hover:opacity-95 uppercase'
+          >
+            Continue with Google
+          </button>
+        </div>
       </form>
 
-      <div className='flex justify-between items-center mt-3'>
-        <p>Don't have an account?</p>
+      <div className='flex items-center justify-center mt-4'>
+        <p className='mr-2'>Don't have an account?</p>
         <Link to={'/signup'}>
           <span className='text-blue-600'>Sign Up</span>
         </Link>
       </div>
 
-      <p className='text-red-500 mt-3'>
-        {/* Error message */}
-      </p>
+      {error && <p className='text-red-500 mt-3'>Error: {error}</p>}
     </div>
   );
 }
