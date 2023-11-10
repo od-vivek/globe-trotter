@@ -16,6 +16,7 @@ export default function Login() {
   // Clear error on component mount
   useEffect(() => {
     dispatch(resetError());
+    dispatch(signInSuccess(null)); // Reset loading state
   }, [dispatch]);
 
   const changeHandler = (event) => {

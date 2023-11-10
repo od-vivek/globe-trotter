@@ -75,20 +75,22 @@ exports.postLogin = async (req, res, next) => {
 
 exports.google = async (req, res, next) => {
     try {
-        const user = await User.findOne({ email: req.body.email });
+        const existingUser = await User.findOne({ email: req.body.email });
 
-        if (user) {
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        if (existingUser) {
+            // User already exists, log in
+            const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET, {
                 expiresIn: '1h',
             });
 
             res.cookie('access_token', token, { httpOnly: true }).status(200).json({
                 success: true,
                 message: 'Login successful',
-                user: { ...user._doc, password: undefined },
+                user: { ...existingUser._doc, password: undefined },
                 token,
             });
         } else {
+            // User does not exist, create a new user
             const generatePassword = generateRandomPassword();
             const hashedPassword = await bcrypt.hash(generatePassword, 10);
 
