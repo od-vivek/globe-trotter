@@ -30,6 +30,7 @@ app.use(cookieParser());
 // // Routes
 // app.use('/api/user', require('./routes/userRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/admin' , require('./routes/adminRoutes'));
 app.use(errorHandler);
 // app.use('/api/listing', require('./routes/listingRoutes'));
 
