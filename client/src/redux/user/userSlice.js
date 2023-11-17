@@ -73,6 +73,31 @@ const userSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+    // New actions for user profile page
+    resetPasswordStart: (state) => {
+      state.loading = true;
+    },
+    resetPasswordSuccess: (state) => {
+      state.loading = false;
+      state.error = null;
+    },
+    resetPasswordFailure: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
+    getUserStart: (state) => {
+      state.loading = true;
+      state.error = null; // Clear the error field when starting to fetch user data
+    },
+    getUserSuccess: (state, action) => {
+      state.currentUser = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    getUserFailure: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
   },
 });
 
@@ -93,6 +118,12 @@ export const {
   signoutUserStart,
   signoutUserSuccess,
   signoutUserFailure,
+  resetPasswordStart,
+  resetPasswordSuccess,
+  resetPasswordFailure,
+  getUserStart,
+  getUserSuccess,
+  getUserFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;

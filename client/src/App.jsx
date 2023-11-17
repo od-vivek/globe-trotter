@@ -8,6 +8,7 @@ import Search from './pages/Search';
 import Destinations from './pages/Destinations';
 import PackageDetails from './pages/PackageDetails';
 import Payment from './pages/Payment';
+import Profile from './pages/Profile';
 import './App.css';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/destination/:destinationId" element={Destinations} />
         <Route path="/package/:packageId" element={PackageDetails} />
         <Route path="/payment" element={Payment} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>
   );
