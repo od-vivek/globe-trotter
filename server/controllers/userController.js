@@ -1,10 +1,32 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 
-// Update user profile
-exports.updateUser = async (req, res, next) => {
+// Update user profile and/or password
+exports.checkPassword = async (req, res, next) => {
     const userId = req.params.userId;
-    const { username, email, password } = req.body;
+
+    try {
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        const isPasswordValid = await bcrypt.compare(req.body.currentPassword, user.password);
+
+        if (!isPasswordValid) {
+            return res.status(401).json({ success: false, message: 'Current password is incorrect' });
+        }
+
+        res.status(200).json({ success: true, message: 'Password check successful' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.updateCurrentUser = async (req, res, next) => {
+    const userId = req.params.userId;
+    const { username, email, newPassword } = req.body;
 
     try {
         const user = await User.findById(userId);
@@ -20,10 +42,12 @@ exports.updateUser = async (req, res, next) => {
         if (email) {
             user.email = email;
         }
-        if (password) {
+
+        // Update password if newPassword is provided
+        if (newPassword) {
             // Hash the new password before saving
-            const hashedPassword = await bcrypt.hash(password, 10);
-            user.password = hashedPassword;
+            const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+            user.password = hashedNewPassword;
         }
 
         await user.save();
@@ -33,6 +57,7 @@ exports.updateUser = async (req, res, next) => {
         next(error);
     }
 };
+
 
 // Delete user account
 exports.deleteUser = async (req, res, next) => {

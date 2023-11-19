@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import logo from '../images/logo.png';
-import { signoutUserStart, signoutUserSuccess, signoutUserFailure } from '../redux/user/userSlice';
+import {
+    signoutUserStart, signoutUserSuccess, signoutUserFailure, updateProfileStart,
+    updateProfileSuccess,
+    updateProfileFailure,
+} from '../redux/user/userSlice';
 import { resetError } from '../redux/user/userSlice';
 
 const Profile = () => {
@@ -10,8 +14,10 @@ const Profile = () => {
     const navigate = useNavigate();
     const { currentUser, error } = useSelector((state) => state.user);
 
+    const [successMessage, setSuccessMessage] = useState('');
+
     const [formData, setFormData] = useState({
-        username: currentUser?.username || '', // Use optional chaining to avoid errors if currentUser is undefined
+        username: currentUser?.username || '', // Use opti  onal chaining to avoid errors if currentUser is undefined
         email: currentUser?.email || '',
         password: '',
         newPassword: '',
@@ -95,6 +101,86 @@ const Profile = () => {
         handleDeleteAccount();
     };
 
+    const handleUpdateProfile = async (e) => {
+        e.preventDefault();
+        try {
+            // Check if newPassword and confirmPassword match
+            if (formData.newPassword !== formData.confirmPassword) {
+                dispatch(updateProfileFailure('New password and confirm password do not match'));
+                return;
+            }
+
+            // Check if currentPassword matches the actual password of the user
+            let passwordCheckResponse;
+
+            // Only check passwords if newPassword is provided
+            if (formData.newPassword) {
+                passwordCheckResponse = await fetch(`/api/user/check-password/${currentUser._id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + document.cookie.split('=')[1],
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        currentPassword: formData.password,
+                    }),
+                });
+
+                if (!passwordCheckResponse.ok) {
+                    const data = await passwordCheckResponse.json().catch(() => null);
+                    console.error('Password check failed. Response:', passwordCheckResponse);
+                    dispatch(updateProfileFailure(data?.message || 'Password check failed'));
+                    return;
+                }
+            }
+
+            // Continue with the update profile request
+            dispatch(updateProfileStart());
+
+            const requestBody = {
+                username: formData.username,
+                email: formData.email,
+                newPassword: formData.newPassword,
+            };
+
+            // Only include currentPassword if it has changed
+            if (formData.newPassword && formData.password) {
+                requestBody.currentPassword = formData.password;
+            }
+
+            const response = await fetch(`/api/user/update/${currentUser._id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + document.cookie.split('=')[1],
+                },
+                credentials: 'include',
+                body: JSON.stringify(requestBody),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                dispatch(updateProfileSuccess(data.user));
+                setSuccessMessage('Profile updated successfully');
+
+                // Clear the success message after 1.5 seconds
+                setTimeout(() => {
+                    setSuccessMessage('');
+                    // Redirect to the home page after 1.5 seconds
+                    navigate('/');
+                }, 1500);
+            } else {
+                const data = await response.json().catch(() => null);
+                console.error('Profile update failed. Response:', response);
+                dispatch(updateProfileFailure(data?.message || 'Profile update failed'));
+            }
+        } catch (error) {
+            console.error('Error during profile update:', error);
+            dispatch(updateProfileFailure('Profile update failed'));
+        }
+    };
+
     return (
         <div className='max-w-md mx-auto p-4 my-5 border border-color3 shadow-md rounded-lg hover:scale-105 transition-transform'>
             <div className='flex flex-col items-center mb-3'>
@@ -144,18 +230,11 @@ const Profile = () => {
                     className='border p-2 rounded'
                 />
                 <button
-                    type="button"
-                    onClick={() => console.log('Update Profile')}
+                    type="submit"
+                    onClick={handleUpdateProfile}
                     className='bg-color4 text-white p-3 rounded-lg hover:opacity-95 uppercase'
                 >
                     Update Profile
-                </button>
-                <button
-                    type="button"
-                    onClick={() => console.log('Reset Password')}
-                    className='bg-color3 text-white p-3 rounded-lg hover:opacity-95 uppercase'
-                >
-                    Reset Password
                 </button>
             </form>
 
@@ -187,8 +266,13 @@ const Profile = () => {
                     </div>
                 </div>
             )}
+            {successMessage && (
+                <p className='text-green-500 mt-2 bg-green-100 border border-green-500 p-1 rounded-sm flex justify-center'>
+                    {successMessage}
+                </p>
+            )}
 
-            {error && <p className='text-red-500 mt-2'>Error: {error}</p>}
+            {error && <p className='text-red-500 mt-2 bg-red-100 border border-red-500 p-1 rounded-sm flex justify-center'>{error}</p>}
         </div>
     );
 };
