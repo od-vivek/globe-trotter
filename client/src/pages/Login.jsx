@@ -30,25 +30,26 @@ export default function Login() {
     event.preventDefault();
     try {
       dispatch(signInStart());
-      const res = await fetch('/api/auth/login', {
+
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
-      const data = await res.json();
-      if (data.success === false) {
-        dispatch(signInFailure(data.message));
-        // You can handle the error here, display a message, etc.
-      } else {
-        dispatch(signInSuccess(data));
+
+      if (response.ok) {
+        const data = await response.json();
+        dispatch(signInSuccess(data.user)); // Assuming the user data is returned from the API
         navigate('/');
+      } else {
+        const data = await response.json();
+        dispatch(signInFailure(data.message || 'An error occurred during login.'));
       }
-    } catch (e) {
-      console.error('Error during login:', e);
+    } catch (error) {
+      console.error('Error during login:', error);
       dispatch(signInFailure('An error occurred during login.'));
-      // You can handle the error here, display a message, etc.
     }
   };
 

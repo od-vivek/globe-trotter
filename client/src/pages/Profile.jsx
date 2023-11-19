@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import logo from '../images/logo.png';
 import { signoutUserStart, signoutUserSuccess, signoutUserFailure } from '../redux/user/userSlice';
-import { resetError  } from '../redux/user/userSlice';
+import { resetError } from '../redux/user/userSlice';
 
 const Profile = () => {
     const dispatch = useDispatch();
@@ -11,8 +11,8 @@ const Profile = () => {
     const { currentUser, error } = useSelector((state) => state.user);
 
     const [formData, setFormData] = useState({
-        username: currentUser.username,
-        email: currentUser.email,
+        username: currentUser?.username || '', // Use optional chaining to avoid errors if currentUser is undefined
+        email: currentUser?.email || '',
         password: '',
         newPassword: '',
         confirmPassword: '',
@@ -21,14 +21,8 @@ const Profile = () => {
     const [showConfirmation, setShowConfirmation] = useState(false);
 
     useEffect(() => {
-        // Clear errors when the component mounts
         dispatch(resetError);
-    
-        // Cleanup function to clear errors on component unmount
-        return () => {
-          dispatch(resetError);
-        };
-      }, [dispatch]);
+    }, [dispatch]);
 
     const changeHandler = (event) => {
         setFormData({
@@ -63,25 +57,30 @@ const Profile = () => {
 
     const handleDeleteAccount = async () => {
         try {
-            const response = await fetch(`/api/user/${currentUser.id}`, {
+            const response = await fetch(`/api/user/delete/${currentUser._id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    // Include the access_token cookie in the request headers
+                    'Authorization': 'Bearer ' + document.cookie.split('=')[1], // Assuming the cookie format is 'access_token=token'
                 },
+                credentials: 'include', // Include cookies in the request
             });
-
             if (response.ok) {
                 dispatch(signoutUserSuccess());
                 navigate('/');
             } else {
-                const data = await response.json();
-                dispatch(signoutUserFailure(data.message || 'Account deletion failed'));
+                const data = await response.json().catch(() => null); // Catch potential non-JSON responses
+                console.error('Account deletion failed. Response:', response);
+                dispatch(signoutUserFailure(data?.message || 'Account deletion failed'));
             }
         } catch (error) {
             console.error('Error during account deletion:', error);
             dispatch(signoutUserFailure('Account deletion failed'));
         }
     };
+
+
 
     const showDeleteConfirmation = () => {
         setShowConfirmation(true);

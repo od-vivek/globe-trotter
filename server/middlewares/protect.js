@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 // Middleware to protect routes
 exports.protect = async (req, res, next) => {
-  let token;
+  const token = req.cookies.access_token;
 
   // Check if the request contains a token in the headers
   if (
@@ -12,9 +12,6 @@ exports.protect = async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     try {
-      // Extract token from the authorization header
-      token = req.headers.authorization.split(' ')[1];
-
       // Verify the token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
