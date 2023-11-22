@@ -9,7 +9,7 @@ router.post('/packages', isAdmin, adminController.addPackage);
 router.delete('/packages/:packageId', isAdmin, adminController.deletePackage);
 
 // Routes for destinations
-router.post('/destinations', isAdmin, adminController.addDestination);
+router.post('/destinations', adminController.addDestination);
 router.delete('/destinations/:destinationId', isAdmin, adminController.deleteDestination);
 
 // Route to create an admin user

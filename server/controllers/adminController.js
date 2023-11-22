@@ -29,10 +29,10 @@ exports.deletePackage = async (req, res, next) => {
 };
 
 exports.addDestination = async (req, res, next) => {
-  const { name, description, imageUrls, reviews } = req.body;
+  const { name, description, imageUrls} = req.body;
 
   try {
-    const newDestination = new Destination({ name, description, imageUrls, reviews });
+    const newDestination = new Destination({ name, description, imageUrls});
     await newDestination.save();
 
     res.status(201).json({ success: true, message: 'Destination added successfully!' });
