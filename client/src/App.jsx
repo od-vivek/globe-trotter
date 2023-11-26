@@ -9,7 +9,9 @@ import Destinations from './pages/Destinations';
 import PackageDetails from './pages/PackageDetails';
 import Payment from './pages/Payment';
 import Profile from './pages/Profile';
+import DestinationMap from './pages/DestinationMap';
 import './App.css';
+import 'leaflet/dist/leaflet.css';
 
 function App() {
   return (
@@ -23,6 +25,7 @@ function App() {
         <Route path="/destination/:destinationId" element={Destinations} />
         <Route path="/package/:packageId" element={PackageDetails} />
         <Route path="/payment" element={Payment} />
+        <Route path="/map/:destinationName" element={<DestinationMap />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>

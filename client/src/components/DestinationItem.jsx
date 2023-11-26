@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 export default function DestinationItem({ destination }) {
   return (
     <div className='bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px]'>
-      <Link to={`/df/${destination._id}`} className='flex flex-col h-full'>
+      <Link to={`/map/${destination.name}`} className='flex flex-col h-full'>
         <img
           src={destination.imageUrls[0]}
           alt='destination cover'

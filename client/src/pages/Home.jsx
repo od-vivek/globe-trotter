@@ -56,23 +56,22 @@ export default function Home() {
           Let's get started...
         </Link>
       </div>
-
-      <Swiper navigation>
+      <Swiper navigation style={{ width: '100%' }}>
         {destinations &&
           destinations.length > 0 &&
           destinations.map((destination) => (
-            <SwiperSlide key={destination._id}>
+            <SwiperSlide key={destination._id} className="w-full">
               <div
                 style={{
                   background: `url(${destination.imageUrls[0]}) center no-repeat`,
-                  backgroundSize: 'cover',
                 }}
-                className='h-[700px]'
+                className='h-[300px]'
                 key={destination._id}
               ></div>
             </SwiperSlide>
           ))}
       </Swiper>
+
 
       {/* destination results for destinations */}
       <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10'>
