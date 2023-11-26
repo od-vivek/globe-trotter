@@ -9,8 +9,8 @@ const Header = () => {
 
   return (
     <header className='bg-color1'>
-      <div className='flex justify-between items-center max-w-6xl mx-auto p-2'>
-        <Link className='flex items-center gap-3' to='/'>
+      <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
+        <Link className='flex items-center gap-2' to='/'>
           <img
             alt='logo'
             src={logo}
