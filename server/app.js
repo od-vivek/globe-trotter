@@ -28,26 +28,14 @@ app.use(express.json());
 app.use(cookieParser());
 
 // // Routes
+app.use('/api' , require('./routes/confirmation'));
 app.use('/api/user', require('./routes/userRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/get', require('./routes/travelRoutes'));
+app.use('/api/payment' , require('./routes/paymentRoutes'));
 app.use(errorHandler);
-// app.use('/api/listing', require('./routes/listingRoutes'));
 
-// Error handling middleware
-// app.use(errorHandler);
-
-// function errorHandler(err, req, res, next) {
-//     const status = err.statusCode || 500;
-//     const message = err.message || 'Internal server error';
-
-//     res.status(status).json({
-//         success: false,
-//         status,
-//         message,
-//     });
-// }
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

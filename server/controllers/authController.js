@@ -57,7 +57,7 @@ exports.postLogin = async (req, res, next) => {
         }
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-            expiresIn: '24h',
+            expiresIn: '100000h',
         });
 
         const { password: pass, ...userData } = user._doc;
@@ -90,7 +90,7 @@ exports.google = async (req, res, next) => {
                 token,
             });
         } else {
-            // User does not exist, create a new user
+            // User does not exist, create a new user with a random password
             const generatePassword = generateRandomPassword();
             const hashedPassword = await bcrypt.hash(generatePassword, 10);
 
@@ -118,6 +118,7 @@ exports.google = async (req, res, next) => {
         next(err);
     }
 };
+
 
 exports.getSignout = async (req, res, next) => {
     try {

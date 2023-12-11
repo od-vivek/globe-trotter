@@ -5,8 +5,8 @@ const { isAdmin } = require('../middlewares/isAdmin');
 // Assuming you have middleware for checking admin role
 
 // Routes for packages
-router.post('/packages', isAdmin , adminController.addPackage);
-router.delete('/packages/:packageId', isAdmin, adminController.deletePackage);
+router.post('/packages' , adminController.addPackage);
+router.delete('/packages/:packageId', adminController.deletePackage);
 
 // Routes for destinations
 router.post('/destinations', adminController.addDestination);

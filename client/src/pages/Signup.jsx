@@ -6,7 +6,7 @@ import {
   signUpSuccess,
   signUpFailure,
   resetError,
-  signInSuccess
+  signInSuccess,
 } from '../redux/user/userSlice';
 import logo from '../images/logo.png';
 import app from '../firebase';
@@ -44,10 +44,16 @@ export default function Signup() {
       });
       const data = await res.json();
       if (data.success === false) {
-        dispatch(signUpFailure(data.message));
+        if (data.errors) {
+          // Handle validation errors
+          const errorMessage = data.errors.map((error) => error.msg).join(', ');
+          dispatch(signUpFailure(errorMessage));
+        } else {
+          // Handle other errors
+          dispatch(signUpFailure(data.message));
+        }
       } else {
-        // Save user in the database here (you may need to make another API call)
-        // After saving, redirect to the login page
+        // Save user in the database here
         navigate('/login');
       }
     } catch (e) {
@@ -58,6 +64,9 @@ export default function Signup() {
 
   const handleGoogleSignIn = async () => {
     try {
+      dispatch(resetError()); // Reset any form errors
+      setFormData({ username: '', email: '', password: '' }); // Reset form fields
+
       const provider = new GoogleAuthProvider();
       const auth = getAuth(app);
 
@@ -70,7 +79,6 @@ export default function Signup() {
         body: JSON.stringify({
           name: result.user.displayName,
           email: result.user.email,
-          photo: result.user.photoURL,
         }),
       });
 
@@ -78,10 +86,14 @@ export default function Signup() {
       if (data.success === false) {
         dispatch(signUpFailure(data.message));
       } else {
-        // Save user in the database here (you may need to make another API call)
-        // After saving, redirect to the home page and dispatch the login success action
-        navigate('/');
+        // Save user in the database here
         dispatch(signInSuccess(data));
+        if (data.createdWithGoogle) {
+          // Redirect to a different page or handle the scenario for users signed up with Google
+          navigate('/profile'); // Change this to your desired route
+        } else {
+          navigate('/');
+        }
       }
     } catch (error) {
       console.error('Could not sign in with Google.', error);
@@ -127,14 +139,16 @@ export default function Signup() {
           >
             {loading ? 'Loading...' : 'Sign Up'}
           </button>
-          <button
+          {/* <button
             onClick={handleGoogleSignIn}
             className='bg-color3 text-white p-3 rounded-lg hover:opacity-95 uppercase'
           >
             Continue with Google
-          </button>
+          </button> */}
         </div>
       </form>
+
+      {error && <p className='text-red-500 mt-3'>{error}</p>}
 
       <div className='flex items-center justify-center mt-4'>
         <p className='mr-2'>Already have an account?</p>
@@ -142,8 +156,6 @@ export default function Signup() {
           <span className='text-blue-600'>Login</span>
         </Link>
       </div>
-
-      {error && <p className='text-red-500 mt-3'>Error: {error}</p>}
     </div>
   );
 }

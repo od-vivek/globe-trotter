@@ -115,12 +115,12 @@ export default function Login() {
           >
             {loading ? 'Loading...' : 'Login'}
           </button>
-          <button
+          {/* <button
             onClick={handleGoogleSignIn}
             className='bg-color3 text-white p-3 rounded-lg hover:opacity-95 uppercase'
           >
             Continue with Google
-          </button>
+          </button> */}
         </div>
       </form>
 

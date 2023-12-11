@@ -5,13 +5,14 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Search from './pages/Search';
-import Destinations from './pages/Destinations';
 import PackageDetails from './pages/PackageDetails';
 import Payment from './pages/Payment';
 import Profile from './pages/Profile';
 import DestinationMap from './pages/DestinationMap';
+import ConfirmPaymentPage from './pages/ConfirmPayment';
 import './App.css';
 import 'leaflet/dist/leaflet.css';
+import AboutUs from './pages/AboutUs';
 
 function App() {
   return (
@@ -21,12 +22,13 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/search" element={Search} />
-        <Route path="/destination/:destinationId" element={Destinations} />
-        <Route path="/package/:packageId" element={PackageDetails} />
-        <Route path="/payment" element={Payment} />
-        <Route path="/map/:destinationName" element={<DestinationMap />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/map/:destinationName" element={<DestinationMap />} />
+        <Route path="/package/:packageId" element={<PackageDetails />} />
+        <Route path='/confirm/:packageId' element={<ConfirmPaymentPage />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/about" element={<AboutUs/>} />
       </Routes>
     </BrowserRouter>
   );

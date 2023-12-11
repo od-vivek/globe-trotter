@@ -5,26 +5,37 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import SwiperCore from 'swiper';
 import 'swiper/css/bundle';
+import { useSelector } from 'react-redux';
 
 export default function Home() {
   SwiperCore.use([Navigation]);
   const [destinations, setDestinations] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [currentHovered, setCurrentHovered] = useState(null);
+  const currentUser = useSelector((state) => state.user.currentUser);
 
   console.log(destinations);
 
   const fetchDestinations = async () => {
     try {
-      const res = await fetch(`/api/get/destinations?destinationsPerPage=4&page=${currentPage}`);
+      const res = await fetch(`/api/get/destinations?destinationsPerPage=6&page=${currentPage}`);
       const data = await res.json();
 
-      setDestinations((prevDestinations) => [...prevDestinations, ...data.destinations]);
+      // Clear destinations when fetching the first page
+      if (currentPage === 1) {
+        setDestinations(data.destinations);
+      } else {
+        // Append new destinations to the existing ones
+        setDestinations((prevDestinations) => [...prevDestinations, ...data.destinations]);
+      }
+
       setTotalPages(data.totalPages);
     } catch (error) {
       console.log(error);
     }
   };
+
 
   useEffect(() => {
     fetchDestinations();
@@ -49,23 +60,23 @@ export default function Home() {
         <div className='text-color4-400 text-xs sm:text-sm'>
           Embark on unforgettable journeys and discover your ideal destination with ease.
         </div>
-        <Link
-          to={'/signup'}
-          className='text-xs sm:text-sm text-blue-800 font-bold hover:underline'
-        >
-          Let's get started...
-        </Link>
+        {!currentUser && (
+          <Link to={'/signup'} className='text-xs sm:text-sm text-blue-800 font-bold hover:underline'>
+            Let's get started...
+          </Link>
+        )}
       </div>
       <Swiper navigation style={{ width: '100%' }}>
         {destinations &&
           destinations.length > 0 &&
           destinations.map((destination) => (
-            <SwiperSlide key={destination._id} className="w-full">
+            <SwiperSlide>
               <div
                 style={{
                   background: `url(${destination.imageUrls[0]}) center no-repeat`,
+                  backgroundSize: 'cover',
                 }}
-                className='h-[300px]'
+                className='h-[800px]'
                 key={destination._id}
               ></div>
             </SwiperSlide>
@@ -80,19 +91,37 @@ export default function Home() {
             <div className='my-3'>
               <h2 className='text-2xl font-semibold text-color3-600'>Popular Destinations</h2>
             </div>
-            <div className='flex flex-wrap gap-4'>
-              {destinations.map((destination) => (
-                <DestinationItem destination={destination} key={destination._id} />
+            <div className='flex flex-wrap justify-center gap-4'>
+              {destinations.map((destination, index) => (
+                <div
+                  className="relative transition-transform transform hover:scale-105"
+                  key={destination._id}
+                  onMouseEnter={() => setCurrentHovered(destination._id)}
+                  onMouseLeave={() => setCurrentHovered(null)}
+                >
+                  <DestinationItem destination={destination} key={destination._id} />
+                  {currentHovered === destination._id && (
+                    <Link to={`/map/${destination.name}`} className='flex flex-col h-full'>
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300">
+                        <div className="text-white text-center">
+                          <h3 className="text-2xl font-semibold">{destination.name}</h3>
+                          <p className="text-sm">{destination.description}</p>
+                        </div>
+                      </div>
+                    </Link>
+                  )}
+                </div>
               ))}
             </div>
             {currentPage < totalPages && (
-              <Link
-                className='text-sm text-blue-800 hover:underline'
-                to={''}
-                onClick={showMoreHandler}
-              >
-                Show more destinations
-              </Link>
+              <div className='flex justify-center mt-4'>
+                <Link
+                  className='text-sm text-blue-800 hover:underline'
+                  onClick={showMoreHandler}
+                >
+                  Show more destinations
+                </Link>
+              </div>
             )}
           </div>
         )}

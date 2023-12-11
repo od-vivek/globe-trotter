@@ -3,7 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import logo from '../images/logo.png';
 import {
-    signoutUserStart, signoutUserSuccess, signoutUserFailure, updateProfileStart,
+    signoutUserStart,
+    signoutUserSuccess,
+    signoutUserFailure,
+    updateProfileStart,
     updateProfileSuccess,
     updateProfileFailure,
 } from '../redux/user/userSlice';
@@ -13,11 +16,11 @@ const Profile = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { currentUser, error } = useSelector((state) => state.user);
-
+    const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
 
     const [formData, setFormData] = useState({
-        username: currentUser?.username || '', // Use opti  onal chaining to avoid errors if currentUser is undefined
+        username: currentUser?.username || '',
         email: currentUser?.email || '',
         password: '',
         newPassword: '',
@@ -27,7 +30,7 @@ const Profile = () => {
     const [showConfirmation, setShowConfirmation] = useState(false);
 
     useEffect(() => {
-        dispatch(resetError);
+        dispatch(resetError());
     }, [dispatch]);
 
     const changeHandler = (event) => {
@@ -39,6 +42,7 @@ const Profile = () => {
 
     const handleLogout = async () => {
         try {
+            setLoading(true);
             dispatch(signoutUserStart());
 
             const response = await fetch('/api/auth/logout', {
@@ -58,6 +62,8 @@ const Profile = () => {
         } catch (error) {
             console.error('Error during logout:', error);
             dispatch(signoutUserFailure('Logout failed'));
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -67,16 +73,16 @@ const Profile = () => {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Include the access_token cookie in the request headers
-                    'Authorization': 'Bearer ' + document.cookie.split('=')[1], // Assuming the cookie format is 'access_token=token'
+                    'Authorization': 'Bearer ' + document.cookie.split('=')[1],
                 },
-                credentials: 'include', // Include cookies in the request
+                credentials: 'include',
             });
+
             if (response.ok) {
                 dispatch(signoutUserSuccess());
                 navigate('/');
             } else {
-                const data = await response.json().catch(() => null); // Catch potential non-JSON responses
+                const data = await response.json().catch(() => null);
                 console.error('Account deletion failed. Response:', response);
                 dispatch(signoutUserFailure(data?.message || 'Account deletion failed'));
             }
@@ -85,8 +91,6 @@ const Profile = () => {
             dispatch(signoutUserFailure('Account deletion failed'));
         }
     };
-
-
 
     const showDeleteConfirmation = () => {
         setShowConfirmation(true);
@@ -104,16 +108,13 @@ const Profile = () => {
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
         try {
-            // Check if newPassword and confirmPassword match
             if (formData.newPassword !== formData.confirmPassword) {
                 dispatch(updateProfileFailure('New password and confirm password do not match'));
                 return;
             }
 
-            // Check if currentPassword matches the actual password of the user
             let passwordCheckResponse;
 
-            // Only check passwords if newPassword is provided
             if (formData.newPassword) {
                 passwordCheckResponse = await fetch(`/api/user/check-password/${currentUser._id}`, {
                     method: 'POST',
@@ -135,7 +136,6 @@ const Profile = () => {
                 }
             }
 
-            // Continue with the update profile request
             dispatch(updateProfileStart());
 
             const requestBody = {
@@ -144,7 +144,6 @@ const Profile = () => {
                 newPassword: formData.newPassword,
             };
 
-            // Only include currentPassword if it has changed
             if (formData.newPassword && formData.password) {
                 requestBody.currentPassword = formData.password;
             }
@@ -164,10 +163,8 @@ const Profile = () => {
                 dispatch(updateProfileSuccess(data.user));
                 setSuccessMessage('Profile updated successfully');
 
-                // Clear the success message after 1.5 seconds
                 setTimeout(() => {
                     setSuccessMessage('');
-                    // Redirect to the home page after 1.5 seconds
                     navigate('/');
                 }, 1500);
             } else {
@@ -232,13 +229,14 @@ const Profile = () => {
                 <button
                     type="submit"
                     onClick={handleUpdateProfile}
-                    className='bg-color4 text-white p-3 rounded-lg hover:opacity-95 uppercase'
+                    className={`bg-color4 text-white p-3 rounded-lg hover:opacity-95 uppercase ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                    disabled={loading}
                 >
-                    Update Profile
+                    {loading ? 'Updating...' : 'Update Profile'}
                 </button>
             </form>
 
-            <div className="flex justify-between mt-4"> {/* Added a flex container with justify-between */}
+            <div className="flex justify-between mt-4">
                 <button
                     type="button"
                     onClick={showDeleteConfirmation}
@@ -266,13 +264,18 @@ const Profile = () => {
                     </div>
                 </div>
             )}
+
             {successMessage && (
                 <p className='text-green-500 mt-2 bg-green-100 border border-green-500 p-1 rounded-sm flex justify-center'>
                     {successMessage}
                 </p>
             )}
 
-            {error && <p className='text-red-500 mt-2 bg-red-100 border border-red-500 p-1 rounded-sm flex justify-center'>{error}</p>}
+            {error && (
+                <p className='text-red-500 mt-2 bg-red-100 border border-red-500 p-1 rounded-sm flex justify-center'>
+                    {error}
+                </p>
+            )}
         </div>
     );
 };

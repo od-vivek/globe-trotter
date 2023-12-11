@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
-
 export default function DestinationItem({ destination }) {
   return (
-    <div className='bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px]'>
+    <div className='bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px] cursor-pointer'>
       <Link to={`/map/${destination.name}`} className='flex flex-col h-full'>
         <img
           src={destination.imageUrls[0]}
@@ -13,7 +12,7 @@ export default function DestinationItem({ destination }) {
           <p className='truncate text-lg font-semibold text-slate-700 text-center'>
             {destination.name}
           </p>
-          <p className='text-sm text-gray-600 line-clamp-2 text-center'>
+          <p className='text-base text-gray-600 line-clamp-3 text-center'>
             {destination.description}
           </p>
         </div>

@@ -1,30 +1,46 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import logo from '../images/logo.png';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import logo from '../images/logo.png';
 
 const Header = () => {
+  const navigate = useNavigate();
   const currentUser = useSelector((state) => state.user.currentUser);
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+
+    const urlParams = new URLSearchParams();
+    urlParams.set('searchTerm', searchTerm);
+
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
+
 
   return (
     <header className='bg-color1'>
       <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
         <Link className='flex items-center gap-2' to='/'>
-          <img
-            alt='logo'
-            src={logo}
-            className='max-h-10' 
-          />
+          <img alt='logo' src={logo} className='max-h-10' />
           <span className='font-bold text color4'>GlobeTrotter</span>
         </Link>
-        <form className='text-center bg-color1 p-2 rounded-full flex justify-center items-center hover:scale-105 hover:px-5 border-2 border-color3'>
+        <form
+          onSubmit={handleSearch}
+          className='text-center bg-color1 p-2 rounded-full flex justify-center items-center hover:scale-105 hover:px-5 border-2 border-color3'
+        >
           <input
             type='text'
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             placeholder='Search...'
             className='bg-transparent border-color3 focus:outline-none w-24 sm:w-64'
           />
-          <button>
+
+          <button type='submit'>
             <FaSearch className='text-color4'></FaSearch>
           </button>
         </form>
