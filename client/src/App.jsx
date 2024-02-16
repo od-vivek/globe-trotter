@@ -8,6 +8,7 @@ import Search from './pages/Search';
 import PackageDetails from './pages/PackageDetails';
 import Payment from './pages/Payment';
 import Profile from './pages/Profile';
+import GuideDashboard from './pages/GuideDashboard';
 import DestinationMap from './pages/DestinationMap';
 import ConfirmPaymentPage from './pages/ConfirmPayment';
 import './App.css';
@@ -28,7 +29,8 @@ function App() {
         <Route path='/confirm/:packageId' element={<ConfirmPaymentPage />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/about" element={<AboutUs/>} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/guide" element={<GuideDashboard />} />
       </Routes>
     </BrowserRouter>
   );

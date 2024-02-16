@@ -49,6 +49,43 @@ router.use((req, res, next) => {
   next();
 });
 
+// Guide Signup
+router.post(
+  '/guide/signup',
+  [
+    // Validate and sanitize guide input
+    check('email')
+      .isEmail()
+      .withMessage('Invalid email address')
+      .normalizeEmail(),
+    check('password')
+      .isLength({ min: 6 })
+      .withMessage('Password must be at least 6 characters long'),
+    check('name')
+      .not()
+      .isEmpty()
+      .withMessage('Name is required'),
+  ],
+  authController.guideSignup
+);
+
+// Guide Login
+router.post(
+  '/guide/login',
+  [
+    // Validate and sanitize guide input
+    check('email')
+      .isEmail()
+      .withMessage('Invalid email address')
+      .normalizeEmail(),
+    check('password')
+      .not()
+      .isEmpty()
+      .withMessage('Password is required'),
+  ],
+  authController.guideLogin
+);
+
 // Other authentication routes
 router.post('/google', authController.google);
 router.get('/logout', authController.getSignout);

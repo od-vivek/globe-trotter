@@ -34,6 +34,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/get', require('./routes/travelRoutes'));
 app.use('/api/payment' , require('./routes/paymentRoutes'));
+app.use('/api/blog' , require('./routes/blogRoutes'));
 app.use(errorHandler);
 
 
