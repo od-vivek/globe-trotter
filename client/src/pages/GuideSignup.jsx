@@ -19,6 +19,7 @@ export default function GuideSignup() {
   const { loading, error } = useSelector((state) => state.user);
 
   useEffect(() => {
+    console.log(formData);
     dispatch(resetError());
     dispatch(signUpSuccess(null)); // Reset loading state
   }, [dispatch]);
@@ -42,14 +43,15 @@ export default function GuideSignup() {
     try {
       dispatch(signUpStart());
 
-      const formDataForBackend = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        formDataForBackend.append(key, value);
-      });
+      const formDataObject = new FormData();
 
+      for (const key in formData) {
+        formDataObject.append(key, formData[key]);
+      }
+      console.log(formDataObject);
       const res = await fetch('/api/auth/guide/signup', {
         method: 'POST',
-        body: formDataForBackend,
+        body: formDataObject,  // Use the FormData object here
       });
 
       const data = await res.json();
@@ -64,6 +66,7 @@ export default function GuideSignup() {
     }
   };
 
+
   return (
     <div className='max-w-lg mx-auto p-4 my-10 border border-color3 shadow-md rounded-lg hover:scale-105 transition-transform'>
       <div className='flex flex-col items-center mb-5'>
@@ -71,7 +74,7 @@ export default function GuideSignup() {
         <span className='font-bold text color3 mt-2 text-2xl text-center'>Sign Up</span>
       </div>
 
-      <form onSubmit={submitHandler} className='flex flex-col gap-3'>
+      <form onSubmit={submitHandler} encType="multipart/form-data" className='flex flex-col gap-3'>
         <input
           type='text'
           placeholder='Name'
@@ -93,7 +96,7 @@ export default function GuideSignup() {
           id='guidePassword'
           onChange={changeHandler}
         />
-         <label htmlFor='guidePhoto' className='text-color4'>
+        <label htmlFor='guidePhoto' className='text-color4'>
           Upload Your Photo here .
         </label>
         <input
@@ -110,6 +113,7 @@ export default function GuideSignup() {
           >
             {loading ? 'Loading...' : 'Sign Up'}
           </button>
+
         </div>
       </form>
 

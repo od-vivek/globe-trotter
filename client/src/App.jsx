@@ -15,6 +15,7 @@ import './App.css';
 import 'leaflet/dist/leaflet.css';
 import AboutUs from './pages/AboutUs';
 import GuideSignup from './pages/GuideSignup';
+import GuideLogin from './pages/GuideLogin';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/about" element={<AboutUs />} />
         <Route path="/guide" element={<GuideDashboard />} />
         <Route path='/guide/signup' element={<GuideSignup />} />
+        <Route path='/guide/login' element={<GuideLogin />} />
       </Routes>
     </BrowserRouter>
   );

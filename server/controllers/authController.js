@@ -10,18 +10,19 @@ const generateRandomPassword = () => {
     return Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
 };
 
-// Multer setup for file storage
+// Define storage for multer
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/guide_photos'); // Set the destination folder
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/guidePhotos'); // Specify the destination directory for uploaded files
     },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix); // Set the file name
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname); // Specify the filename for the uploaded file
     },
 });
 
-const upload = multer({ storage });
+// Create multer instance with the defined storage
+const upload = multer({ storage: storage });
+
 
 exports.postSignup = async (req, res, next) => {
     const errors = validationResult(req);
@@ -134,16 +135,14 @@ exports.google = async (req, res, next) => {
     }
 };
 
-
 exports.guideSignup = async (req, res) => {
     try {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ success: false, errors: errors.array() });
-        }
-
         const { guideName, guideEmail, guidePassword } = req.body;
+
+        // Additional validation checks
+        if (!guideName || !guideEmail || !guidePassword) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
 
         // Check if the guide with the provided email already exists
         const existingGuide = await Guide.findOne({ email: guideEmail });
@@ -155,31 +154,34 @@ exports.guideSignup = async (req, res) => {
         // Hash the password
         const hashedPassword = await bcrypt.hash(guidePassword, 10);
 
-        // Use multer to handle file upload
-        upload.single('guidePhoto')(req, res, async (err) => {
-            if (err) {
-                console.error('Error uploading guide photo:', err);
-                return res.status(500).json({ error: 'Error uploading guide photo' });
-            }
+        // Create a new guide with the file path
+        const newGuide = new Guide({
+            name: guideName,
+            email: guideEmail,
+            password: hashedPassword,
+            blogs: [],
+            guidePhoto: req.file ? req.file.path : null, // Store the multer-generated file path
+        });
 
-            // Create a new guide with the file path
-            const newGuide = new Guide({
-                name: guideName,
-                email: guideEmail,
-                password: hashedPassword,
-                guidePhoto: req.file ? req.file.path : null, // Store the file path
-            });
+        // Save the guide to the database
+        const savedGuide = await newGuide.save();
 
-            // Save the guide to the database
-            const savedGuide = await newGuide.save();
-
-            return res.status(201).json(savedGuide);
+        // Respond with the saved guide, including the multer-generated file path
+        return res.status(201).json({
+            _id: savedGuide._id,
+            name: savedGuide.name,
+            email: savedGuide.email,
+            guidePhoto: savedGuide.guidePhoto,
+            // Add any other fields you want to include in the response
         });
     } catch (error) {
         console.error('Error in guide signup:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+
+
 
 exports.guideLogin = async (req, res, next) => {
     try {
