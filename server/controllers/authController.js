@@ -4,10 +4,24 @@ const User = require('../models/User');
 const { validationResult } = require('express-validator');
 const { errorHandler } = require('../utils/error');
 const Guide = require('../models/Guide');
+const multer = require('multer');
 
 const generateRandomPassword = () => {
     return Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
 };
+
+// Multer setup for file storage
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/guide_photos'); // Set the destination folder
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix); // Set the file name
+    },
+});
+
+const upload = multer({ storage });
 
 exports.postSignup = async (req, res, next) => {
     const errors = validationResult(req);
@@ -129,31 +143,38 @@ exports.guideSignup = async (req, res) => {
             return res.status(422).json({ success: false, errors: errors.array() });
         }
 
-        const { name, email, password } = req.body;
+        const { guideName, guideEmail, guidePassword } = req.body;
 
         // Check if the guide with the provided email already exists
-        const existingGuide = await Guide.findOne({ email });
+        const existingGuide = await Guide.findOne({ email: guideEmail });
 
         if (existingGuide) {
             return res.status(400).json({ error: 'Guide already exists with this email' });
         }
 
         // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(guidePassword, 10);
 
-        // Create a new guide
-        const newGuide = new Guide({
-            name,
-            email,
-            password: hashedPassword,
+        // Use multer to handle file upload
+        upload.single('guidePhoto')(req, res, async (err) => {
+            if (err) {
+                console.error('Error uploading guide photo:', err);
+                return res.status(500).json({ error: 'Error uploading guide photo' });
+            }
+
+            // Create a new guide with the file path
+            const newGuide = new Guide({
+                name: guideName,
+                email: guideEmail,
+                password: hashedPassword,
+                guidePhoto: req.file ? req.file.path : null, // Store the file path
+            });
+
+            // Save the guide to the database
+            const savedGuide = await newGuide.save();
+
+            return res.status(201).json(savedGuide);
         });
-
-        // Save the guide to the database
-        const savedGuide = await newGuide.save();
-
-        // You can generate and send a JWT token here if needed
-
-        return res.status(201).json(savedGuide);
     } catch (error) {
         console.error('Error in guide signup:', error);
         return res.status(500).json({ error: 'Internal Server Error' });

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate , useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import logo from '../images/logo.png';
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const currentUser = useSelector((state) => state.user.currentUser);
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -20,6 +21,7 @@ const Header = () => {
     navigate(`/search?${searchQuery}`);
   };
 
+  const isGuidePath = location.pathname.startsWith('/guide');
 
   return (
     <header className='bg-color1'>
@@ -57,7 +59,7 @@ const Header = () => {
               <li className='text-color4 hover:text-color3 hover:scale-110'>Profile</li>
             </Link>
           ) : (
-            <Link to='/login'>
+            <Link to={isGuidePath ? '/guide/login' : '/login'}>
               <li className='text-color4 hover:text-color3 hover:scale-110'>Login</li>
             </Link>
           )}

@@ -14,6 +14,7 @@ import ConfirmPaymentPage from './pages/ConfirmPayment';
 import './App.css';
 import 'leaflet/dist/leaflet.css';
 import AboutUs from './pages/AboutUs';
+import GuideSignup from './pages/GuideSignup';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/guide" element={<GuideDashboard />} />
+        <Route path='/guide/signup' element={<GuideSignup />} />
       </Routes>
     </BrowserRouter>
   );

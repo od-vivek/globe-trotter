@@ -156,6 +156,12 @@ export default function Signup() {
           <span className='text-blue-600'>Login</span>
         </Link>
       </div>
+      <div className='flex items-center justify-center mt-4'>
+        <p className='mr-2'>Have Travel Experience ? </p>
+        <Link to={'/guide'}>
+          <span className='text-blue-600'>Become a Guide</span>
+        </Link>
+      </div>
     </div>
   );
 }

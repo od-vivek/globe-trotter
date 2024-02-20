@@ -123,11 +123,16 @@ export default function Login() {
           </button> */}
         </div>
       </form>
-
       <div className='flex items-center justify-center mt-4'>
         <p className='mr-2'>Don't have an account?</p>
         <Link to={'/signup'}>
           <span className='text-blue-600'>Sign Up</span>
+        </Link>
+      </div>
+      <div className='flex items-center justify-center mt-4'>
+        <p className='mr-2'>Are you a guide ? </p>
+        <Link to={'/guide'}>
+          <span className='text-blue-600'>Guide Login</span>
         </Link>
       </div>
 
