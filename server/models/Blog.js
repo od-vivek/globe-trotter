@@ -1,30 +1,26 @@
 const mongoose = require('mongoose');
 
 const blogSchema = new mongoose.Schema({
-    guideId: {
-        type: String,
-        required: true,
-    },
-    title: {
-        type: String,
-        required: true,
-    },
-    content: {
-        type: String,
-        required: true,
-    },
-    photos: [{
-        type: String,
-        required: true,
-    }],
-    likes: {
-        type: Number,
-        default: 0,
-    },
-    dislikes: {
-        type: Number,
-        default: 0,
-    },
+  guide: {
+    type: String,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  content: {
+    type: String,
+    required: true,
+  },
+  likes: {
+    type: [String], // Array of userIds who liked the blog
+    default: [],
+  },
+  dislikes: {
+    type: [String], // Array of userIds who disliked the blog
+    default: [],
+  },
 });
 
 const Blog = mongoose.model('Blog', blogSchema);

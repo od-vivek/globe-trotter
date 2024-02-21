@@ -8,7 +8,7 @@ import Search from './pages/Search';
 import PackageDetails from './pages/PackageDetails';
 import Payment from './pages/Payment';
 import Profile from './pages/Profile';
-import GuideDashboard from './pages/GuideDashboard';
+import Guide from './pages/Guide';
 import DestinationMap from './pages/DestinationMap';
 import ConfirmPaymentPage from './pages/ConfirmPayment';
 import './App.css';
@@ -16,6 +16,8 @@ import 'leaflet/dist/leaflet.css';
 import AboutUs from './pages/AboutUs';
 import GuideSignup from './pages/GuideSignup';
 import GuideLogin from './pages/GuideLogin';
+import GuideDashboard from './pages/GuideDashboard';
+import GuideBlogs from './pages/GuideBlogs';
 
 function App() {
   return (
@@ -32,9 +34,11 @@ function App() {
         <Route path="/payment" element={<Payment />} />
         <Route path="/search" element={<Search />} />
         <Route path="/about" element={<AboutUs />} />
-        <Route path="/guide" element={<GuideDashboard />} />
+        <Route path="/guide" element={<Guide />} />
         <Route path='/guide/signup' element={<GuideSignup />} />
         <Route path='/guide/login' element={<GuideLogin />} />
+        <Route path='/guide/dashboard' element={<GuideDashboard />} />
+        <Route path='/guide/blogs' element={<GuideBlogs />} />
       </Routes>
     </BrowserRouter>
   );

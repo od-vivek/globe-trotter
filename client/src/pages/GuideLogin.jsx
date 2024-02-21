@@ -31,18 +31,18 @@ export default function Login() {
     try {
       dispatch(signInStart());
 
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('/api/auth/guide/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
-
+      
       if (response.ok) {
         const data = await response.json();
-        dispatch(signInSuccess(data.user)); // Assuming the user data is returned from the API
-        navigate('/');
+        dispatch(signInSuccess(data.guide));
+        navigate('/guide/dashboard');
       } else {
         const data = await response.json();
         dispatch(signInFailure(data.message || 'An error occurred during login.'));
@@ -53,38 +53,6 @@ export default function Login() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      const provider = new GoogleAuthProvider(); // Create a GoogleAuthProvider instance
-      const auth = getAuth(app); // Initialize authentication with the Firebase app
-
-      const result = await signInWithPopup(auth, provider); // Sign in with Google using the authentication instance and the GoogleAuthProvider
-      // console.log(result);
-      const res = await fetch('/api/auth/google', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: result.user.displayName,
-          email: result.user.email,
-        }),
-      });
-
-      const data = await res.json();
-      if (data.success === false) {
-        dispatch(signInFailure(data.message));
-        // You can handle the error here, display a message, etc.
-      } else {
-        dispatch(signInSuccess(data));
-        navigate('/');
-      }
-    } catch (error) {
-      console.error('Could not sign in with Google.', error);
-      dispatch(signInFailure('Failed to sign in with Google.'));
-      navigate('/signup');
-    }
-  };
 
   return (
     <div className='max-w-lg mx-auto p-4 my-10 border border-color3 shadow-md rounded-lg hover:scale-105 transition-transform'>

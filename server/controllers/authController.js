@@ -179,18 +179,14 @@ exports.guideSignup = async (req, res) => {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
-
-
-
 exports.guideLogin = async (req, res, next) => {
     try {
-        const errors = validationResult(req);
+        // const errors = validationResult(req);
 
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ success: false, errors: errors.array() });
-        }
-
+        // if (!errors.isEmpty()) {
+        //     return res.status(422).json({ success: false, errors: errors.array() });
+        // }
+        // console.log(req.body);
         const { email, password } = req.body;
 
         // Find the guide by email

@@ -74,17 +74,6 @@ router.post(
 // Guide Login
 router.post(
   '/guide/login',
-  [
-    // Validate and sanitize guide input
-    check('email')
-      .isEmail()
-      .withMessage('Invalid email address')
-      .normalizeEmail(),
-    check('password')
-      .not()
-      .isEmpty()
-      .withMessage('Password is required'),
-  ],
   authController.guideLogin
 );
 

@@ -47,6 +47,21 @@ const Header = () => {
           </button>
         </form>
 
+        {isGuidePath ? ( <ul className='flex gap-9'>
+          <Link to='/about'>
+            <li className='text-color4 hover:text-color3 hover:scale-110'>About Us</li>
+          </Link>
+          {currentUser ? (
+            <Link to='guide/blogs'>
+              <li className='text-color4 hover:text-color3 hover:scale-110'>Blogs</li>
+            </Link>
+          ) : (
+            <Link to='guide/login'>
+              <li className='text-color4 hover:text-color3 hover:scale-110'>Login</li>
+            </Link>
+          )}
+        </ul>
+        ) : (
         <ul className='flex gap-9'>
           <Link to='/'>
             <li className='text-color4 hover:text-color3 hover:scale-110'>Home</li>
@@ -59,11 +74,12 @@ const Header = () => {
               <li className='text-color4 hover:text-color3 hover:scale-110'>Profile</li>
             </Link>
           ) : (
-            <Link to={isGuidePath ? '/guide/login' : '/login'}>
+            <Link to='/login'>
               <li className='text-color4 hover:text-color3 hover:scale-110'>Login</li>
             </Link>
           )}
         </ul>
+        )}
       </div>
     </header>
   );

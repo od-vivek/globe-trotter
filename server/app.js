@@ -6,6 +6,8 @@ const cors = require('cors');
 var cookieParser = require('cookie-parser');
 const errorHandler = require('./utils/error');
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: ["http://localhost:3000", "https://gregarious-raindrop-091940.netlify.app"],
     methods: ['POST', 'GET', 'HEAD', 'PUT', 'DELETE'],
