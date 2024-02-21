@@ -110,6 +110,18 @@ const userSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+    postBlogStart: (state) => {
+      state.loading = true;
+    },
+    postBlogSuccess: (state, action) => {
+      // state.currentUser = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    postBlogFailure: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
   },
 });
 
@@ -139,6 +151,9 @@ export const {
   updateProfileStart,
   updateProfileSuccess,
   updateProfileFailure,
+  postBlogFailure,
+  postBlogStart,
+  postBlogSuccess
 } = userSlice.actions;
 
 export default userSlice.reducer;

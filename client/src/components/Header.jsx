@@ -57,7 +57,7 @@ const Header = () => {
             </Link>
           ) : (
             <Link to='guide/login'>
-              <li className='text-color4 hover:text-color3 hover:scale-110'>Login</li>
+              <li className='text-color4 hover:text-color3 hover:scale-110'></li>
             </Link>
           )}
         </ul>
