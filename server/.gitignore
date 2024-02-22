@@ -15,3 +15,4 @@ yarn-error.log
 # Coverage reports
 coverage/
 /uploads
+/LOGS

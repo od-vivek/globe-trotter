@@ -42,7 +42,10 @@ export default function Login() {
       if (response.ok) {
         const data = await response.json();
         dispatch(signInSuccess(data.user)); // Assuming the user data is returned from the API
-        navigate('/');
+        if(data.user.role === "admin"){
+          navigate("/admin/dashboard")
+        }
+        else navigate('/');
       } else {
         const data = await response.json();
         dispatch(signInFailure(data.message || 'An error occurred during login.'));

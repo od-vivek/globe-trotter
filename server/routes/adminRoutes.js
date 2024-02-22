@@ -15,4 +15,11 @@ router.delete('/destinations/:destinationId',  adminController.deleteDestination
 // Route to create an admin user
 router.post('/create-admin', adminController.createAdminUser);
 
+// get routes
+router.get('/destinations', adminController.getDestinations);
+router.get('/packages', adminController.getPackages)
+router.get('/blogs', adminController.getBlogs)
+
+router.delete('/blogs/:id', adminController.deleteBlogs)
+
 module.exports = router;

@@ -5,6 +5,15 @@ const app = express();
 const cors = require('cors');
 var cookieParser = require('cookie-parser');
 const errorHandler = require('./utils/error');
+const morgan = require('morgan');
+const fs = require('fs');
+const path = require('path');
+
+// Create a writable stream for the logs
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'LOGS', 'access.log'), { flags: 'a' });
+
+// Use morgan middleware for logging to a file
+app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

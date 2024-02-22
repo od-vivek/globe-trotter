@@ -62,3 +62,46 @@ exports.fetchGuideBlogs = async (req, res, next) => {
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
+
+// Fetch blogs based on destination
+exports.fetchBlogsByDestination = async (req, res, next) => {
+  try {
+    const { destination } = req.body;
+
+    if (!destination) {
+      return res.status(400).json({ success: false, message: 'Destination is required in the request body' });
+    }
+
+    // Use a regular expression to perform a case-insensitive search for blogs with the given destination in their title
+    const blogsByDestination = await Blog.find({ title: { $regex: new RegExp(destination, 'i') } });
+
+    res.status(200).json({ success: true, blogs: blogsByDestination });
+  } catch (error) {
+    console.error('Error fetching blogs by destination:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+// Fetch a blog by its ID
+exports.fetchBlogById = async (req, res, next) => {
+  try {
+    const { blogId } = req.params;
+
+    if (!blogId) {
+      return res.status(400).json({ success: false, message: 'BlogId is required in the request body' });
+    }
+
+    // Find the blog based on the provided blogId
+    const blog = await Blog.findById(blogId);
+
+    if (!blog) {
+      return res.status(404).json({ success: false, message: 'Blog not found' });
+    }
+
+    res.status(200).json({ success: true, blog });
+  } catch (error) {
+    console.error('Error fetching blog by ID:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+

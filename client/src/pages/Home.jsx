@@ -14,6 +14,7 @@ export default function Home() {
   const [totalPages, setTotalPages] = useState(1);
   const [currentHovered, setCurrentHovered] = useState(null);
   const currentUser = useSelector((state) => state.user.currentUser);
+  const [totalBlogs, setTotalBlogs] = useState([]);
 
   console.log(destinations);
 
@@ -36,8 +37,19 @@ export default function Home() {
     }
   };
 
+  const fetchTotalBlogs = async () => {
+    try {
+      const response = await fetch('/api/blog/get');
+      const data = await response.json();
+      setTotalBlogs(data.blogs);
+    } catch (error) {
+      console.error('Error fetching total blogs:', error);
+      // Handle error, e.g., display an error message to the user
+    }
+  };
 
   useEffect(() => {
+    fetchTotalBlogs();
     fetchDestinations();
   }, [currentPage]);
 
@@ -51,6 +63,7 @@ export default function Home() {
   return (
     <div>
       {/* top */}
+      
       <div className='flex flex-col gap-6 p-10 px-3 max-w-6xl mx-auto mt-1'>
         <h3 className='text-color4 font-bold text-3xl lg:text-6xl'>
           Explore <span className='text-color-500'> Discover </span>
@@ -82,14 +95,12 @@ export default function Home() {
             </SwiperSlide>
           ))}
       </Swiper>
-
-
       {/* destination results for destinations */}
       <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10'>
         {destinations && destinations.length > 0 && (
           <div className=''>
-            <div className='my-3'>
-              <h2 className='text-2xl font-semibold text-color3-600'>Popular Destinations</h2>
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold">Popular Destinations</h2>
             </div>
             <div className='flex flex-wrap justify-center gap-4'>
               {destinations.map((destination, index) => (
@@ -125,6 +136,21 @@ export default function Home() {
             )}
           </div>
         )}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold">Popular Blogs</h2>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {totalBlogs.map((blog) => (
+            <div key={blog._id} className="p-6 border border-gray-300 rounded-md">
+              <Link to={`/blog/${blog._id}`} className="text-blue-500 hover:underline">
+                <h4 className="text-xl font-semibold mb-2">{blog.title}</h4>
+              </Link>
+              <p className="text-gray-800 line-clamp-3">{blog.content}</p>
+            </div>
+          ))}
+        </div>
+
       </div>
     </div>
   );

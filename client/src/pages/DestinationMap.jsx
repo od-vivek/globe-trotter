@@ -4,6 +4,8 @@ import axios from 'axios';
 import { TileLayer, Marker, Popup, MapContainer } from 'react-leaflet';
 import Packages from '../components/Packages';
 import { Icon } from 'leaflet';
+import { Link } from 'react-router-dom';
+
 
 const createCustomIcon = () =>
     new Icon({
@@ -16,9 +18,30 @@ const createCustomIcon = () =>
 const DestinationMap = () => {
     const { destinationName } = useParams();
     const [locationData, setLocationData] = useState(null);
+    const [blogs, setBlogs] = useState([]);
     console.log(locationData);
 
     useEffect(() => {
+        console.log(blogs);
+        const fetchBlogsForKeyword = async (keyword) => {
+            try {
+                const response = await fetch('/api/blog/dest-blogs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ destination: keyword }),
+                });
+
+                const data = await response.json();
+
+                if (data.blogs) {
+                    setBlogs(data.blogs);
+                }
+            } catch (error) {
+                console.error('Error fetching blogs:', error);
+            }
+        };
         const fetchData = async () => {
             try {
                 const response = await axios.get(
@@ -32,7 +55,7 @@ const DestinationMap = () => {
                 console.error('Error fetching location data:', error);
             }
         };
-
+        fetchBlogsForKeyword(destinationName);
         fetchData();
     }, [destinationName]);
 
@@ -51,7 +74,24 @@ const DestinationMap = () => {
                     </MapContainer>
                 )}
             </div>
+            <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold">Available Packages</h2>
+            </div>
             <Packages></Packages>
+            <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold">Featured Blogs</h2>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {blogs.map((blog) => (
+                    <div key={blog._id} className="p-6 border border-gray-300 rounded-md">
+                        <Link to={`/blog/${blog._id}`} className="text-blue-500 hover:underline">
+                            <h4 className="text-xl font-semibold mb-2">{blog.title}</h4>
+                        </Link>
+                        <p className="text-gray-800 line-clamp-3">{blog.content}</p>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };

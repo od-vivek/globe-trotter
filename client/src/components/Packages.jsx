@@ -39,9 +39,6 @@ export default function Packages() {
 
     return (
         <div className='flex-1'>
-            <h1 className='text-2xl font-semibold border-b p-3 text-color4 mt-5'>
-                Available Packages :
-            </h1>
             <div className='p-7 flex flex-wrap gap-4'>
                 {packages.map((dest_package) => (
                     <PackageItem key={dest_package._id} dest_package={dest_package} />

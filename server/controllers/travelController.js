@@ -1,5 +1,6 @@
 const Destination = require('../models/Destination');
 const Package = require('../models/Package');
+const Blog = require('../models/Blog');
 
 exports.getDestinations = async (req, res) => {
   try {
@@ -87,19 +88,26 @@ exports.addReview = async (req, res) => {
 
 // Search for packages by destination name or package name
 // Search for packages by destination name or package name
+
 exports.searchPackages = async (req, res) => {
-  const { searchQuery } = req.query; // Corrected the destructuring assignment
+  const { searchTerm } = req.query;
 
   try {
     const packages = await Package.find({
       $or: [
-        { name: { $regex: new RegExp(searchQuery, 'i') } }, // Case-insensitive package name search
+        { name: { $regex: new RegExp(searchTerm, 'i') } }, // Case-insensitive package name search
       ],
     });
 
-    res.status(200).json({ success: true, packages });
+    const blogs = await Blog.find({
+      $or: [
+        { title: { $regex: new RegExp(searchTerm, 'i') } }, // Case-insensitive blog title search
+      ],
+    });
+
+    res.status(200).json({ success: true, packages, blogs });
   } catch (error) {
-    console.error('Error searching packages:', error);
+    console.error('Error searching packages and blogs:', error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };

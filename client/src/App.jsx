@@ -19,6 +19,8 @@ import GuideLogin from './pages/GuideLogin';
 import GuideDashboard from './pages/GuideDashboard';
 import GuideBlogs from './pages/GuideBlogs';
 import BlogForm from './pages/BlogForm';
+import BlogDetails from './pages/BlogDetails';
+import AdminDashboardPage from './pages/AdminDashboardPage';
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function App() {
         <Route path='/guide/dashboard' element={<GuideDashboard />} />
         <Route path='/guide/blogs' element={<GuideBlogs />} />
         <Route path='/guide/add-blog' element={<BlogForm />} />
+        <Route path='/blog/:blogId' element={<BlogDetails />} />
+        <Route path='/admin/dashboard' element={<AdminDashboardPage />} />
       </Routes>
     </BrowserRouter>
   );

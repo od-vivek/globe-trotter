@@ -6,5 +6,7 @@ const blogController = require('../controllers/blogController');
 router.post('/post', blogController.postBlog);
 router.get('/get', blogController.fetchAllBlogs);
 router.post('/guideblogs' , blogController.fetchGuideBlogs);
+router.post('/dest-blogs' , blogController.fetchBlogsByDestination);
+router.get('/:blogId' , blogController.fetchBlogById);
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Package = require('../models/Package');
 const Destination = require('../models/Destination');
+const Blog = require('../models/Blog')
 const bcrypt = require('bcryptjs');
 
 exports.addPackage = async (req, res, next) => {
@@ -74,3 +75,47 @@ exports.createAdminUser = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getBlogs =  async (req, res) => {
+  try {
+    const blogs = await Blog.find();
+    res.status(200).json(blogs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+}
+
+exports.getDestinations = async (req,res)=>{
+  try {
+    const destinations = await Destination.find();
+    res.status(200).json(destinations);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+}
+
+exports.getPackages = async (req, res) => {
+  try {
+    const packages = await Package.find();
+    res.status(200).json(packages);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+} 
+
+exports.deleteBlogs = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletedBlog = await Blog.findByIdAndDelete(id);
+    if (!deletedBlog) {
+      return res.status(404).json({ message: 'Blog not found' });
+    }
+    res.status(200).json({ message: 'Blog deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+}
