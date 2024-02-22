@@ -46,7 +46,7 @@ export default function BlogForm() {
         const data = await response.json();
         dispatch(postBlogSuccess(data)); // Assuming the blog data is returned from the API
         // Optionally, you can redirect to the newly created blog or any other page
-        navigate(`/blog/${data._id}`);
+        navigate(`/guide/dashboard`);
       } else {
         const data = await response.json();
         dispatch(postBlogFailure(data.message || 'An error occurred while posting the blog.'));

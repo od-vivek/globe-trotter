@@ -160,7 +160,7 @@ exports.guideSignup = async (req, res) => {
             email: guideEmail,
             password: hashedPassword,
             blogs: [],
-            guidePhoto: req.file ? req.file.path : null, // Store the multer-generated file path
+            guidePhoto: req.file ? req.file.path.replace(/\\/g, "/"): null, // Store the multer-generated file path
         });
 
         // Save the guide to the database

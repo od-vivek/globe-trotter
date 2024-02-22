@@ -8,5 +8,6 @@ router.get('/package/:packageId', travelController.getPackage);
 router.get('/packages/:destinationName', travelController.getPackages);
 router.post('/packages/review/:packageId', travelController.addReview);
 router.get('/', travelController.searchPackages);
+router.post('/guide' , travelController.getGuideDetails);
 
 module.exports = router;

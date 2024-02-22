@@ -18,12 +18,12 @@ app.use(morgan('combined', { stream: accessLogStream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: ["http://localhost:3000", "https://gregarious-raindrop-091940.netlify.app"],
+    origin: ["http://localhost:3000"],
     methods: ['POST', 'GET', 'HEAD', 'PUT', 'DELETE'],
     credentials: true
 }))
 app.use(cookieParser());
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 dotenv.config();
 
 // Database connection

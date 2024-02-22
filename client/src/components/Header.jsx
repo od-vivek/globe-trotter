@@ -23,6 +23,7 @@ const Header = () => {
 
   const isGuidePath = location.pathname.startsWith('/guide');
 
+  // if(currentUser.role === 'admin') return (<div></div>)
   return (
     <header className='bg-color1'>
       <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
@@ -48,8 +49,8 @@ const Header = () => {
         </form>
 
         {isGuidePath ? ( <ul className='flex gap-9'>
-          <Link to='/about'>
-            <li className='text-color4 hover:text-color3 hover:scale-110'>About Us</li>
+          <Link to='/guide/dashboard'>
+            <li className='text-color4 hover:text-color3 hover:scale-110'>Dashboard</li>
           </Link>
           {currentUser ? (
             <Link to='guide/blogs'>

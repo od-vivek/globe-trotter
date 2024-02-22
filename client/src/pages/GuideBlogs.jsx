@@ -47,15 +47,6 @@ const BlogList = () => {
 
   return (
     <div className="container mx-auto my-8 p-8 bg-transparent rounded-md">
-      <div className="flex justify-between items-center mb-4">
-        {/* <h3 className="text-xl font-semibold">Blogs:</h3> */}
-        {currentUser && (
-          <Link to="/guide/add-blog" className="bg-blue-500 text-white py-2 px-4 rounded">
-            Write a Blog
-          </Link>
-        )}
-      </div>
-
       {/* Display total blogs */}
       <div>
         <h4 className="text-lg font-semibold mb-2">All Blogs:</h4>
@@ -68,21 +59,6 @@ const BlogList = () => {
           </div>
         ))}
       </div>
-
-      {/* Display guide blogs */}
-      {currentUser && (
-        <div>
-          <h4 className="text-lg font-semibold mb-2">Your Blogs:</h4>
-          {guideBlogs.map((blog) => (
-            <div key={blog._id} className="mb-6 p-4 border border-gray-300 rounded-md">
-              <Link to={`/blog/${blog._id}`} className="text-blue-500 hover:underline">
-                <h4 className="text-xl font-semibold mb-2">{blog.title}</h4>
-              </Link>
-              <p className="text-gray-800">{blog.content}</p>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };

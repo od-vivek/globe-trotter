@@ -1,6 +1,8 @@
 const Destination = require('../models/Destination');
 const Package = require('../models/Package');
 const Blog = require('../models/Blog');
+const Guide = require('../models/Guide');
+
 
 exports.getDestinations = async (req, res) => {
   try {
@@ -112,3 +114,24 @@ exports.searchPackages = async (req, res) => {
   }
 };
 
+
+exports.getGuideDetails = async (req, res) => {
+  try {
+    const { guideName } = req.body;
+
+    if (!guideName) {
+      return res.status(400).json({ success: false, message: 'GuideName is required in the request body' });
+    }
+
+    const guide = await Guide.findOne({ name: guideName });
+
+    if (!guide) {
+      return res.status(404).json({ success: false, message: 'Guide not found' });
+    }
+
+    res.status(200).json({ success: true, guide });
+  } catch (error) {
+    console.error('Error fetching guide details:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
