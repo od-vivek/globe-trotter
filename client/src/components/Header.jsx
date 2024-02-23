@@ -25,7 +25,7 @@ const Header = () => {
 
   // if(currentUser.role === 'admin') return (<div></div>)
   return (
-    <header className='bg-color1'>
+    <header className='bg-gray-200'>
       <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
         <Link className='flex items-center gap-2' to='/'>
           <img alt='logo' src={logo} className='max-h-10' />

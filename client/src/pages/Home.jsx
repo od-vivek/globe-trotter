@@ -66,7 +66,7 @@ export default function Home() {
       
       <div className='flex flex-col gap-6 p-10 px-3 max-w-6xl mx-auto mt-1'>
         <h3 className='text-color4 font-bold text-3xl lg:text-6xl'>
-          Explore <span className='text-color-500'> Discover </span>
+          Explore, <span className='text-color-500'> Discover, </span>
           <br />
           <span className='text-color3-500'> Wander </span>
         </h3>
@@ -99,44 +99,46 @@ export default function Home() {
       <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10'>
         {destinations && destinations.length > 0 && (
           <div className=''>
-            <div className="text-center mb-8">
+            <div className="text-center mb-3">
               <h2 className="text-2xl font-bold">Popular Destinations</h2>
             </div>
             <div className='flex flex-wrap justify-center gap-4'>
               {destinations.map((destination, index) => (
                 <div
-                  className="relative transition-transform transform hover:scale-105"
-                  key={destination._id}
-                  onMouseEnter={() => setCurrentHovered(destination._id)}
-                  onMouseLeave={() => setCurrentHovered(null)}
-                >
-                  <DestinationItem destination={destination} key={destination._id} />
-                  {currentHovered === destination._id && (
-                    <Link to={`/map/${destination.name}`} className='flex flex-col h-full'>
-                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300">
-                        <div className="text-white text-center">
-                          <h3 className="text-2xl font-semibold">{destination.name}</h3>
-                          <p className="text-sm">{destination.description}</p>
-                        </div>
-                      </div>
-                    </Link>
-                  )}
-                </div>
+                className="relative transform hover:scale-105"
+                key={destination._id}
+                onMouseEnter={() => setCurrentHovered(destination._id)}
+                onMouseLeave={() => setCurrentHovered(null)}
+              >
+                <DestinationItem destination={destination} key={destination._id} />
+              </div>
               ))}
             </div>
             {currentPage < totalPages && (
               <div className='flex justify-center mt-4'>
-                <Link
-                  className='text-sm text-blue-800 hover:underline'
-                  onClick={showMoreHandler}
+              <Link
+                to='#'  // Replace '#' with the actual link if needed
+                className='inline-flex items-center px-4 py-2 border border-blue-800 rounded-md text-sm text-blue-800 hover:bg-blue-800 hover:text-white transition-all duration-300'
+                onClick={showMoreHandler}
+              >
+                <span className="focus:outline-none">Show more destinations</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 ml-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  Show more destinations
-                </Link>
-              </div>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </Link>
+            </div>
+            
+            
             )}
           </div>
         )}
-        <div className="text-center mb-8">
+        <div className="text-center mb-1">
           <h2 className="text-2xl font-bold">Popular Blogs</h2>
         </div>
 

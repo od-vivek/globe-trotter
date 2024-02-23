@@ -61,7 +61,8 @@ const DestinationMap = () => {
 
     return (
         <div>
-            <div>
+            <div style={{ marginLeft: '20px', marginRight: '20px' }}>
+            <h2 className="text-center mb-5 mt-5 text-3xl font-bold">Location</h2>
                 {locationData && (
                     <MapContainer center={[locationData.lat, locationData.lon]} zoom={5} style={{ height: '600px', width: '100%' }}>
                         <TileLayer
@@ -74,15 +75,15 @@ const DestinationMap = () => {
                     </MapContainer>
                 )}
             </div>
-            <div className="text-center mb-8">
+            <div className="text-center mb-5 mt-5">
                 <h2 className="text-3xl font-bold">Available Packages</h2>
+            <Packages></Packages>   
             </div>
-            <Packages></Packages>
             <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold">Featured Blogs</h2>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-5">
                 {blogs.map((blog) => (
                     <div key={blog._id} className="p-6 border border-gray-300 rounded-md">
                         <Link to={`/blog/${blog._id}`} className="text-blue-500 hover:underline">
