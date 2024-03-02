@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+const Destination = require('../models/Destination'); // Import the Destination model
+
 
 exports.checkPassword = async (req, res, next) => {
   const userId = req.params.userId;
@@ -108,5 +110,84 @@ exports.getUser = async (req, res) => {
   } catch (error) {
     console.error('Error fetching user:', error);
     res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+exports.addToWishlist = async (req, res) => {
+  const { userId } = req.params;
+  const dest = req.body.dest;
+
+  try {
+    // Check if the user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Check if the product ID is already in the wishlist
+    if (user.wishlist.includes(dest)) {
+      return res.status(400).json({ error: 'Product is already in the wishlist' });
+    }
+
+    // Add the product ID to the wishlist
+    user.wishlist.push(dest);
+
+    // Save the updated user object
+    await user.save();
+
+    return res.status(200).json({ message: 'Product added to wishlist successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.fetchWishlist = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Check if the user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Retrieve the destinations based on destination names in the wishlist
+    const wishlistDestinations = await Destination.find({ name: { $in: user.wishlist } });
+
+    // Return the wishlist destinations
+    return res.status(200).json({ wishlist: wishlistDestinations });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.deleteFromWishlist = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { destinationName } = req.body;
+
+    // Find the user by userId
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Directly remove the destinationName from the wishlist array
+    const index = user.wishlist.indexOf(destinationName);
+
+    if (index !== -1) {
+      user.wishlist.splice(index, 1);
+    }
+
+    // Save the updated user
+    await user.save();
+
+    return res.status(200).json({ message: 'Destination removed from wishlist successfully' });
+  } catch (error) {
+    console.error('Error deleting from wishlist:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
 };

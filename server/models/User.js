@@ -20,6 +20,14 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+  bookings: [{
+    type: String,
+    unique: true
+  }],
+  wishlist: [{
+    type: String,
+    unique: true
+  }]
 });
 
 const User = mongoose.model('User', userSchema);

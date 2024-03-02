@@ -1,6 +1,9 @@
 const nodemailer = require('nodemailer');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
+const mongoose = require('mongoose');
+
+const User = require('../models/User'); // Adjust the path accordingly
 
 const sendConfirmationEmail = async (req, res) => {
     try {
@@ -18,6 +21,21 @@ const sendConfirmationEmail = async (req, res) => {
         const pdfFilePath = './confirmation.pdf';
         pdfDoc.pipe(fs.createWriteStream(pdfFilePath));
         pdfDoc.end();
+
+        // Save booking details to the user's booking history
+        const bookingDetails = {
+            packageId: mongoose.Types.ObjectId(packageDetails._id), // Assuming packageDetails has a valid _id
+            numberOfMembers: formDetails.numberOfMembers,
+            memberDetails: formDetails.memberDetails,
+            selectedDate: formDetails.selectedDate,
+            totalAmount: formDetails.totalAmount,
+        };
+
+        await User.findByIdAndUpdate(
+            userDetails._id, // Assuming _id is the user's MongoDB identifier
+            { $push: { bookings: bookingDetails } },
+            { new: true }
+        );
 
         // Create a Nodemailer transporter
         const transporter = nodemailer.createTransport({

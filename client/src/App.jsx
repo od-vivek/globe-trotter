@@ -21,6 +21,7 @@ import GuideBlogs from './pages/GuideBlogs';
 import BlogForm from './pages/BlogForm';
 import BlogDetails from './pages/BlogDetails';
 import AdminDashboardPage from './pages/AdminDashboardPage';
+import WishlistComponent from './pages/Wishlist';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path='/guide/add-blog' element={<BlogForm />} />
         <Route path='/blog/:blogId' element={<BlogDetails />} />
         <Route path='/admin/dashboard' element={<AdminDashboardPage />} />
+        <Route path='/wishlist' element={<WishlistComponent />} />
       </Routes>
     </BrowserRouter>
   );

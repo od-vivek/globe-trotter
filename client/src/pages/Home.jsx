@@ -63,7 +63,7 @@ export default function Home() {
   return (
     <div>
       {/* top */}
-      
+
       <div className='flex flex-col gap-6 p-10 px-3 max-w-6xl mx-auto mt-1'>
         <h3 className='text-color4 font-bold text-3xl lg:text-6xl'>
           Explore, <span className='text-color-500'> Discover, </span>
@@ -79,7 +79,7 @@ export default function Home() {
           </Link>
         )}
       </div>
-      <Swiper navigation style={{ width: '100%' }}>
+      <Swiper autoplay={{ delay: 5000 }} navigation style={{ width: '100%' }}>
         {destinations &&
           destinations.length > 0 &&
           destinations.map((destination) => (
@@ -105,36 +105,36 @@ export default function Home() {
             <div className='flex flex-wrap justify-center gap-4'>
               {destinations.map((destination, index) => (
                 <div
-                className="relative transform hover:scale-105"
-                key={destination._id}
-                onMouseEnter={() => setCurrentHovered(destination._id)}
-                onMouseLeave={() => setCurrentHovered(null)}
-              >
-                <DestinationItem destination={destination} key={destination._id} />
-              </div>
+                  className="relative transform hover:scale-105"
+                  key={destination._id}
+                  onMouseEnter={() => setCurrentHovered(destination._id)}
+                  onMouseLeave={() => setCurrentHovered(null)}
+                >
+                  <DestinationItem destination={destination} key={destination._id} />
+                </div>
               ))}
             </div>
             {currentPage < totalPages && (
               <div className='flex justify-center mt-4'>
-              <Link
-                to='#'  // Replace '#' with the actual link if needed
-                className='inline-flex items-center px-4 py-2 border border-blue-800 rounded-md text-sm text-blue-800 hover:bg-blue-800 hover:text-white transition-all duration-300'
-                onClick={showMoreHandler}
-              >
-                <span className="focus:outline-none">Show more destinations</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 ml-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                <Link
+                  to='#'  // Replace '#' with the actual link if needed
+                  className='inline-flex items-center px-4 py-2 border border-blue-800 rounded-md text-sm text-blue-800 hover:bg-blue-800 hover:text-white transition-all duration-300'
+                  onClick={showMoreHandler}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </Link>
-            </div>
-            
-            
+                  <span className="focus:outline-none">Show more destinations</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 ml-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </Link>
+              </div>
+
+
             )}
           </div>
         )}

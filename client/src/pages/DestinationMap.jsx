@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams , useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { TileLayer, Marker, Popup, MapContainer } from 'react-leaflet';
 import Packages from '../components/Packages';
+import { useSelector } from 'react-redux';
 import { Icon } from 'leaflet';
 import { Link } from 'react-router-dom';
-
 
 const createCustomIcon = () =>
     new Icon({
@@ -15,14 +15,42 @@ const createCustomIcon = () =>
         popupAnchor: [0, -10],
     });
 
+
 const DestinationMap = () => {
+    const navigate = useNavigate();
     const { destinationName } = useParams();
     const [locationData, setLocationData] = useState(null);
     const [blogs, setBlogs] = useState([]);
-    console.log(locationData);
+    const currentUser = useSelector((state) => state.user.currentUser);
+    const [wishlistMessage, setWishlistMessage] = useState('');
+
+    const addToWishlist = async () => {
+        console.log(currentUser);
+        const dest = destinationName;
+        console.log("clicked");
+        try {
+            const response = await fetch(`/api/user/add-to-wishlist/${currentUser._id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ dest }),
+            });
+
+            if (response.ok) {  
+                navigate('/wishlist');
+                const data = await response.json();
+                setWishlistMessage(data.message);
+            } else {
+                setWishlistMessage('Failed to add product to wishlist');
+            }
+        } catch (error) {
+            console.error('Error adding to wishlist:', error);
+            setWishlistMessage('Internal server error');
+        }
+    };
 
     useEffect(() => {
-        console.log(blogs);
         const fetchBlogsForKeyword = async (keyword) => {
             try {
                 const response = await fetch('/api/blog/dest-blogs', {
@@ -42,6 +70,7 @@ const DestinationMap = () => {
                 console.error('Error fetching blogs:', error);
             }
         };
+
         const fetchData = async () => {
             try {
                 const response = await axios.get(
@@ -55,6 +84,7 @@ const DestinationMap = () => {
                 console.error('Error fetching location data:', error);
             }
         };
+
         fetchBlogsForKeyword(destinationName);
         fetchData();
     }, [destinationName]);
@@ -62,7 +92,7 @@ const DestinationMap = () => {
     return (
         <div>
             <div style={{ marginLeft: '20px', marginRight: '20px' }}>
-            <h2 className="text-center mb-5 mt-5 text-3xl font-bold">Location</h2>
+                <h2 className="text-center mb-5 mt-5 text-3xl font-bold">Location</h2>
                 {locationData && (
                     <MapContainer center={[locationData.lat, locationData.lon]} zoom={5} style={{ height: '600px', width: '100%' }}>
                         <TileLayer
@@ -77,8 +107,17 @@ const DestinationMap = () => {
             </div>
             <div className="text-center mb-5 mt-5">
                 <h2 className="text-3xl font-bold">Available Packages</h2>
-            <Packages></Packages>   
+                <Packages />
             </div>
+
+            {locationData && (
+                <div className="flex justify-center mb-5">
+                    <button onClick={addToWishlist} className='bg-color4 text-white p-3 rounded-lg hover:opacity-95 uppercase'>
+                        Add to Wishlist
+                    </button>
+                </div>
+            )}
+
             <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold">Featured Blogs</h2>
             </div>

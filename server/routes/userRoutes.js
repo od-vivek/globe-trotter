@@ -14,4 +14,10 @@ router.get('/get/:userId', userController.getUser);
 
 router.post('/check-password/:userId', userController.checkPassword);
 
+router.post('/add-to-wishlist/:userId', userController.addToWishlist);
+
+router.get('/fetch-wishlist/:userId', userController.fetchWishlist);
+
+router.post('/delete-from-wishlist/:userId', userController.deleteFromWishlist);
+
 module.exports = router;
