@@ -2,7 +2,7 @@ const Destination = require('../models/Destination');
 const Package = require('../models/Package');
 const Blog = require('../models/Blog');
 const Guide = require('../models/Guide');
-
+const  client = require("../Redis/config")
 
 exports.getDestinations = async (req, res) => {
   try {
@@ -36,6 +36,14 @@ exports.getPackages = async (req, res) => {
     // Find all packages for the given destination
     const packages = await Package.find({ destination: destination.name });
 
+    const setData = await client.set("PackageDetails", JSON.stringify(packages));
+    if (!setData) {
+        console.log("Something went wrong while caching data.");
+    } else {
+        await client.expire("PackageDetails", 3600)
+    }
+
+    console.log("Fetching Data From the DataBase");
     res.json({ packages });
   } catch (error) {
     console.error('Error fetching packages:', error);

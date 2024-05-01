@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const travelController = require('../controllers/travelController');
+const cachedPackage = require("../middlewares/redisPackage")
 
 // Define a route for displaying destinations with dynamic pagination
 /**
@@ -62,7 +63,7 @@ router.get('/package/:packageId', travelController.getPackage);
  *       '500':
  *         description: Internal server error
  */
-router.get('/packages/:destinationName', travelController.getPackages);
+router.get('/packages/:destinationName', cachedPackage, travelController.getPackages);
 /**
  * @swagger
  * /packages/review/{packageId}:
