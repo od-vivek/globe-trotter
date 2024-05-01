@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const Destination = require('../models/Destination'); // Import the Destination model
-
+const Booking = require('../models/Booking'); // Make sure to adjust the path
 
 exports.checkPassword = async (req, res, next) => {
   const userId = req.params.userId;
@@ -189,5 +189,53 @@ exports.deleteFromWishlist = async (req, res) => {
   } catch (error) {
     console.error('Error deleting from wishlist:', error);
     return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+exports.getLatestBooking = async (req, res) => {
+  const userId = req.body.userId;
+  console.log(userId);
+  try {
+    // Find the latest booking for the user
+    const latestBooking = await Booking.findOne({ user: userId })
+      .sort({ createdAt: 'desc' }) // Sort by createdAt in descending order to get the latest booking
+      .limit(1);
+
+    if (!latestBooking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    res.json({
+      package: latestBooking.package,
+      numberOfMembers: latestBooking.numberOfMembers,
+      selectedDate: latestBooking.selectedDate,
+      totalAmount: latestBooking.totalAmount,
+      createdAt: latestBooking.createdAt,
+    });
+  } catch (error) {
+    console.error('Error fetching latest booking:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+exports.getBookings = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Retrieve all bookings for the user, sorted by selectedDate in descending order
+    const bookings = await Booking.find({ user: userId })
+      .sort({ selectedDate: -1 })
+      .lean();
+
+    // Check if there are bookings
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json({ error: 'No bookings found for the user' });
+    }
+
+    // Send the booking objects with details to the frontend
+    res.json({ bookings });
+  } catch (error) {
+    console.error('Error retrieving bookings:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };

@@ -30,6 +30,11 @@ const packageSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  guide: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Guide',
+    required: true,
+  },
   imageUrls: [{
     type: String,
     required: true,

@@ -9,11 +9,15 @@ import { useNavigate } from "react-router-dom";
 import BlogsList from "./BlogsList";
 import PackageList from "./PackageList";
 import DestinationList from "./DestinationList";
+import UserList from "./UserList";
+import GuidesList from "./GuidesList";
 
 const panels = {
     "Manage Packages": <PackageList></PackageList>,
     "Manage Blogs": <BlogsList></BlogsList>,
-    "Manage Destination": <DestinationList></DestinationList>
+    "Manage Destination": <DestinationList></DestinationList>,
+    "Manage Users": <UserList></UserList>,
+    "Manage Guides": <GuidesList></GuidesList>,
 }
 
 export default function AdminDashboard() {

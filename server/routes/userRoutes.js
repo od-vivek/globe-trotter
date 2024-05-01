@@ -20,4 +20,8 @@ router.get('/fetch-wishlist/:userId', userController.fetchWishlist);
 
 router.post('/delete-from-wishlist/:userId', userController.deleteFromWishlist);
 
+router.post('/bookings/latest' , userController.getLatestBooking);
+
+router.get('/bookings/:userId' , userController.getBookings);
+
 module.exports = router;

@@ -11,8 +11,9 @@ import {
     updateProfileFailure,
 } from '../redux/user/userSlice';
 import { resetError } from '../redux/user/userSlice';
+import BookingHistory from '../components/BookingHistory';
 
-const Profile = () => {
+const Dashboard = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { currentUser, error } = useSelector((state) => state.user);
@@ -179,105 +180,120 @@ const Profile = () => {
     };
 
     return (
-        <div className='max-w-md mx-auto p-4 my-5 border border-color3 shadow-md rounded-lg hover:scale-105 transition-transform'>
-            <div className='flex flex-col items-center mb-3'>
-                <img alt='logo' src={logo} className='max-h-8' />
-                <span className='font-bold text color3 mt-2 text-lg text-center'>User Profile</span>
-            </div>
+        <div className='flex' style={{ justifyContent: "space-evenly", minHeight: "85vh", position: "relative" }}>
+            {/* User Profile Component */}
+            <div className='w-full max-w-md p-4 my-5 border border-color3 shadow-md rounded-lg hover:scale-105 transition-transform' style={{ height: "100%" }}>
+                <div className='flex flex-col items-center mb-3'>
+                    <img alt='logo' src={logo} className='max-h-8' />
+                    <span className='font-bold text color3 mt-2 text-lg text-center'>User Profile</span>
+                </div>
 
-            <form className='flex flex-col gap-3'>
-                <label htmlFor="username">Username:</label>
-                <input
-                    type="text"
-                    id="username"
-                    value={formData.username}
-                    onChange={changeHandler}
-                    className='border p-2 rounded'
-                />
-                <label htmlFor="email">Email:</label>
-                <input
-                    type="email"
-                    id="email"
-                    value={formData.email}
-                    onChange={changeHandler}
-                    className='border p-2 rounded'
-                />
-                <label htmlFor="password">Password:</label>
-                <input
-                    type="password"
-                    id="password"
-                    value={formData.password}
-                    onChange={changeHandler}
-                    className='border p-2 rounded'
-                />
-                <label htmlFor="newPassword">New Password:</label>
-                <input
-                    type="password"
-                    id="newPassword"
-                    value={formData.newPassword}
-                    onChange={changeHandler}
-                    className='border p-2 rounded'
-                />
-                <label htmlFor="confirmPassword">Confirm Password:</label>
-                <input
-                    type="password"
-                    id="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={changeHandler}
-                    className='border p-2 rounded'
-                />
-                <button
-                    type="submit"
-                    onClick={handleUpdateProfile}
-                    className={`bg-color4 text-white p-3 rounded-lg hover:opacity-95 uppercase ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
-                    disabled={loading}
-                >
-                    {loading ? 'Updating...' : 'Update Profile'}
-                </button>
-            </form>
+                <form className='flex flex-col gap-3'>
+                    <label htmlFor="username">Username:</label>
+                    <input
+                        type="text"
+                        id="username"
+                        value={formData.username}
+                        onChange={changeHandler}
+                        className='border p-2 rounded'
+                    />
+                    <label htmlFor="email">Email:</label>
+                    <input
+                        type="email"
+                        id="email"
+                        value={formData.email}
+                        onChange={changeHandler}
+                        className='border p-2 rounded'
+                        disabled
+                    />
+                    <label htmlFor="password">Password:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        value={formData.password}
+                        onChange={changeHandler}
+                        className='border p-2 rounded'
+                    />
+                    <label htmlFor="newPassword">New Password:</label>
+                    <input
+                        type="password"
+                        id="newPassword"
+                        value={formData.newPassword}
+                        onChange={changeHandler}
+                        className='border p-2 rounded'
+                    />
+                    <label htmlFor="confirmPassword">Confirm Password:</label>
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={changeHandler}
+                        className='border p-2 rounded'
+                    />
+                    <button
+                        type="submit"
+                        onClick={handleUpdateProfile}
+                        className={`bg-color4 text-white p-3 rounded-lg hover:opacity-95 uppercase ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                        disabled={loading}
+                    >
+                        {loading ? 'Updating...' : 'Update Profile'}
+                    </button>
+                </form>
 
-            <div className="flex justify-between mt-4">
-                <button
-                    type="button"
-                    onClick={showDeleteConfirmation}
-                    className='text-red-600'
-                >
-                    Delete Account
-                </button>
-                <button
-                    type="button"
-                    onClick={handleLogout}
-                    className='text-green-600'
-                >
-                    Sign Out
-                </button>
-            </div>
+                <div className="flex justify-between mt-4">
+                    <button
+                        type="button"
+                        onClick={showDeleteConfirmation}
+                        className='text-red-600'
+                    >
+                        Delete Account
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handleLogout}
+                        className='text-green-600'
+                    >
+                        Sign Out
+                    </button>
+                </div>
 
-            {showConfirmation && (
-                <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white p-4 rounded-lg">
-                        <p>Are you sure you want to delete your account?</p>
-                        <div className="flex justify-end mt-4">
-                            <button onClick={hideDeleteConfirmation} className="mr-4">Cancel</button>
-                            <button onClick={confirmDeleteAccount} className="text-red-600">Delete</button>
+                {showConfirmation && (
+                    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+                        <div className="bg-white p-4 rounded-lg">
+                            <p>Are you sure you want to delete your account?</p>
+                            <div className="flex justify-end mt-4">
+                                <button onClick={hideDeleteConfirmation} className="mr-4">Cancel</button>
+                                <button onClick={confirmDeleteAccount} className="text-red-600">Delete</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            {successMessage && (
-                <p className='text-green-500 mt-2 bg-green-100 border border-green-500 p-1 rounded-sm flex justify-center'>
-                    {successMessage}
-                </p>
-            )}
+                {successMessage && (
+                    <p className='text-green-500 mt-2 bg-green-100 border border-green-500 p-1 rounded-sm flex justify-center'>
+                        {successMessage}
+                    </p>
+                )}
 
-            {error && (
-                <p className='text-red-500 mt-2 bg-red-100 border border-red-500 p-1 rounded-sm flex justify-center'>
-                    {error}
-                </p>
+                {error && (
+                    <p className='text-red-500 mt-2 bg-red-100 border border-red-500 p-1 rounded-sm flex justify-center'>
+                        {error}
+                    </p>
+                )}
+            </div>
+            {currentUser && currentUser.role === "user" && (
+            <div className='w-full max-w-md p-4 my-5 border border-color3 shadow-md rounded-lg hover:scale-105 transition-transform' style={{ overflowY: 'scroll', height: '100%' }}>
+                <BookingHistory />
+            </div>
             )}
+            {/* <button
+                onClick={handleCheckWishlist}
+                className='bg-blue-500 text-white p-3 rounded-lg hover:opacity-95 uppercase mt-4'
+            >
+                Check Wishlist
+            </button> */}
         </div>
     );
 };
 
-export default Profile;
+export default Dashboard;

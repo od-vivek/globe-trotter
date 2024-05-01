@@ -16,6 +16,11 @@ const guideSchema = new mongoose.Schema({
     guidePhoto: {
         type: String, // Store the file path
     },
+    packages: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Package',
+        required: true,
+    }],
     blogs: [{
         type: String, // Assuming you use strings as blog IDs
     }],

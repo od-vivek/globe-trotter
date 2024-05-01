@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Header from './components/Header'; // Import the Header component
+import Header from './components/Header';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Search from './pages/Search';
 import PackageDetails from './pages/PackageDetails';
 import Payment from './pages/Payment';
-import Profile from './pages/Profile';
+import Dashboard from './pages/Dashboard';
 import Guide from './pages/Guide';
 import DestinationMap from './pages/DestinationMap';
 import ConfirmPaymentPage from './pages/ConfirmPayment';
@@ -20,8 +20,13 @@ import GuideDashboard from './pages/GuideDashboard';
 import GuideBlogs from './pages/GuideBlogs';
 import BlogForm from './pages/BlogForm';
 import BlogDetails from './pages/BlogDetails';
-import AdminDashboardPage from './pages/AdminDashboardPage';
 import WishlistComponent from './pages/Wishlist';
+import Failure from './pages/Failure';
+import Sucess from './pages/Success';
+import AdminManage from './pages/AdminManage';
+import AdminDashboard from './pages/AdminDashboard';
+import NewPackage from './pages/NewPackage';
+import AddPackage from './pages/AddPackage';
 
 function App() {
   return (
@@ -31,7 +36,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/map/:destinationName" element={<DestinationMap />} />
         <Route path="/package/:packageId" element={<PackageDetails />} />
         <Route path='/confirm/:packageId' element={<ConfirmPaymentPage />} />
@@ -44,12 +49,19 @@ function App() {
         <Route path='/guide/dashboard' element={<GuideDashboard />} />
         <Route path='/guide/blogs' element={<GuideBlogs />} />
         <Route path='/guide/add-blog' element={<BlogForm />} />
+        <Route path='/guide/packages' element={<NewPackage />} />
+        <Route path='/guide/add-package' element={<AddPackage />} />
+        <Route path='/guide/profile' element = {<Dashboard />} />
         <Route path='/blog/:blogId' element={<BlogDetails />} />
-        <Route path='/admin/dashboard' element={<AdminDashboardPage />} />
+        <Route path='/admin/dashboard' element={<AdminDashboard />} />
+        <Route path='/admin/manage' element = {<AdminManage />} />
+        <Route path='/admin/profile' element = {<Dashboard />} />
         <Route path='/wishlist' element={<WishlistComponent />} />
+        <Route path='/success' element={<Sucess />} />
+        <Route path='/failure' element={<Failure />} />
       </Routes>
     </BrowserRouter>
   );
-}
+} 
 
 export default App;

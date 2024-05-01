@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import logo from '../images/logo.png';
+import { loadStripe } from '@stripe/stripe-js';
 
 const ConfirmPaymentPage = () => {
   const navigate = useNavigate();
@@ -18,6 +19,18 @@ const ConfirmPaymentPage = () => {
 
   // Add currentUser details to the state
   const [userDetails, setUserDetails] = useState(null);
+
+  const [stripe, setStripe] = useState(null);
+
+  useEffect(() => {
+    const initStripe = async () => {
+      // Load Stripe.js asynchronously
+      const stripeObject = await loadStripe("pk_test_51Mqyu9SBO8rd4wslTZIcsiAmMkS6dr0jGeMZqC2tmAVZQOJxtzH3dFZ1CsDikKn2VSjMPeaCmx7Uk4CVSpkuvElf00EVeHkYxQ");
+      setStripe(stripeObject);
+    };
+
+    initStripe();
+  }, []);
 
   useEffect(() => {
     // Fetch package details only once
@@ -44,6 +57,7 @@ const ConfirmPaymentPage = () => {
       setUserDetails({
         name: currentUser.name,
         email: currentUser.email,
+        id : currentUser._id
       });
     }
   }, [packageId, currentUser]);
@@ -56,11 +70,29 @@ const ConfirmPaymentPage = () => {
     }
   }, [numberOfMembers, packageDetails, userDetails]);
 
-  const handleMemberChange = (event) => {
-    const count = parseInt(event.target.value, 10);
-    setNumberOfMembers(count);
-    setMemberDetails(Array(count).fill(''));
+  const handleKeyDown = (event) => {
+    // Prevent the Backspace key from navigating back
+    if (event.key === 'Backspace') {
+      event.preventDefault();
+    }
   };
+
+  const handleKeyPress = (event) => {
+    // Prevent the Backspace key from modifying the input
+    if (event.key === 'Backspace') {
+      event.preventDefault();
+    }
+  };
+
+  const handleMemberChange = (event) => {
+    console.log(packageDetails);
+    const count = parseInt(event.target.value, 10);
+    const validCount = Math.min(Math.max(1, count), 10); // Ensure count is between 1 and 10
+    setNumberOfMembers(validCount);
+    setMemberDetails(Array(validCount).fill(''));
+  };
+
+
 
   const handleNameChange = (index, event) => {
     const updatedMembers = [...memberDetails];
@@ -75,37 +107,82 @@ const ConfirmPaymentPage = () => {
     const currentDate = new Date();
     const selectedDateObj = new Date(selectedDate);
 
-    // Check if the selected date is in the future and at least 5 days in advance
-    if (selectedDateObj > currentDate && selectedDateObj.getTime() - currentDate.getTime() >= 5 * 24 * 60 * 60 * 1000) {
+    // Check if the selected date is in the future and at least 7 days in advance
+    const minimumDate = new Date();
+    minimumDate.setDate(currentDate.getDate() + 7);
+
+    if (selectedDateObj > currentDate && selectedDateObj >= minimumDate) {
       setSelectedDate(selectedDate);
       setError(''); // Clear any previous error message
     } else {
       // Show an error message
-      setError('Invalid date selected. Please choose a date in the future and at least 5 days in advance.');
+      setError('Invalid date selected. Please choose a date in the future and at least 7 days in advance.');
     }
   };
 
-  const handlePayButtonClick = async () => {
-    // Validate all fields before proceeding to payment
-    const memberErrors = memberDetails.some((name) => name.trim() === '');
-    const dateError = selectedDate === '';
 
-    if (memberErrors || dateError) {
-      setError(
-        `Please fill in ${memberErrors && dateError
-          ? 'all the details'
-          : memberErrors
-            ? 'all member details'
-            : 'the travel date'
-        } before proceeding to payment.`
-      );
-    } else {
-      // Clear any previous errors
-      setError('');
+  // const handlePayButtonClick = async () => {
+  //   // Validate all fields before proceeding to payment
+  //   const memberErrors = memberDetails.some((name) => name.trim() === '');
+  //   const dateError = selectedDate === '';
 
-      // Set loading state to true
-      setLoading(true);
+  //   if (memberErrors || dateError) {
+  //     setError(
+  //       `Please fill in ${memberErrors && dateError
+  //         ? 'all the details'
+  //         : memberErrors
+  //           ? 'all member details'
+  //           : 'the travel date'
+  //       } before proceeding to payment.`
+  //     );
+  //   } else {
+  //     // Clear any previous errors
+  //     setError('');
 
+  //     // Set loading state to true
+  //     setLoading(true);
+
+  //     // Prepare data to send to the server
+
+  //     try {
+  //       // Send data to the server
+  //       const response = await fetch('/api/send-confirmation-email', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify(formData),
+  //       });
+
+  //       if (response.ok) {
+  //         // If the email is sent successfully, set payment success state to true
+  //         setPaymentSuccess(true);
+  //         // Navigate to '/payment' without using history
+  //         setError(<span className="text-green-500">Payment successful. Please check your email.</span>);
+  //         setLoading(false);
+
+  //         setTimeout(() => {
+  //           navigate('/');
+  //         }, 2000);
+  //       } else {
+  //         const data = await response.json();
+  //         console.error('Error sending confirmation email:', data.error);
+  //         setError('Error sending confirmation email. Please try again.');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error sending confirmation email:', error);
+  //       setError('Error sending confirmation email. Please try again.');
+  //     } finally {
+  //       // Set loading state back to false
+  //       setLoading(false);
+  //     }
+  //   }
+  // };
+
+  const handlePay = async (event) => {
+    // console.log(packageDetails);
+    event.preventDefault();
+    try {
       // Prepare data to send to the server
       const formData = {
         userDetails, // Make sure userDetails is included
@@ -117,41 +194,38 @@ const ConfirmPaymentPage = () => {
           totalAmount,
         },
       };
+      // Send data to the server
+      const response = await fetch('/api/payment/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-      try {
-        // Send data to the server
-        const response = await fetch('/api/send-confirmation-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
+      if (response.ok) {
+        const session = await response.json();
+        // console.log(session);
+        // console.log('Redirecting to Checkout with session ID:', session);
+        // console.log('Before redirectToCheckout');
+        const result = await stripe.redirectToCheckout({
+          sessionId: session
         });
+        console.log('After redirectToCheckout');
 
-        if (response.ok) {
-          // If the email is sent successfully, set payment success state to true
-          setPaymentSuccess(true);
-          // Navigate to '/payment' without using history
-          setError(<span className="text-green-500">Payment successful. Please check your email.</span>);
-          setLoading(false);
-
-          setTimeout(() => {
-            navigate('/');
-          }, 2000);
-        } else {
-          const data = await response.json();
-          console.error('Error sending confirmation email:', data.error);
-          setError('Error sending confirmation email. Please try again.');
+        // Check for any errors during redirection
+        if (result.error) {
+          console.error('Error redirecting to Checkout:', result.error);
         }
-      } catch (error) {
-        console.error('Error sending confirmation email:', error);
-        setError('Error sending confirmation email. Please try again.');
-      } finally {
-        // Set loading state back to false
-        setLoading(false);
+      } else {
+        const data = await response.json();
+        console.error('Error creating checkout session:', data.error);
       }
+    } catch (error) {
+      console.error('Error:', error);
     }
   };
+
 
   return (
     <div className='max-w-lg mx-auto p-4 my-10 border border-color3 shadow-md rounded-lg hover:scale-105 transition-transform'>
@@ -166,7 +240,10 @@ const ConfirmPaymentPage = () => {
           type='number'
           value={numberOfMembers}
           min={1}
+          max={5} // Set your desired maximum value for the number of members
           onChange={handleMemberChange}
+          onKeyDown={handleKeyDown}
+          onKeyPress={handleKeyPress}
           className='border p-3 rounded-lg'
         />
 
@@ -203,7 +280,7 @@ const ConfirmPaymentPage = () => {
           ) : (
             <>
               <button
-                onClick={handlePayButtonClick}
+                onClick={handlePay}
                 className='bg-green-500 border border-black text-black p-2 rounded-lg hover:opacity-95 uppercase'>
                 Pay
               </button>

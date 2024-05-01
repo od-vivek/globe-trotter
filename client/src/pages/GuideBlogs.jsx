@@ -55,6 +55,9 @@ const BlogList = () => {
             <Link to={`/blog/${blog._id}`} className="text-blue-500 hover:underline">
               <h4 className="text-xl font-semibold mb-2">{blog.title}</h4>
             </Link>
+            <Link to={`/blog/${blog._id}`} className="text-blue-500 hover:underline">
+              <p className="text-gray-800 font-bold">{blog.guide}</p>
+            </Link>
             <p className="text-gray-800">{blog.content}</p>
           </div>
         ))}

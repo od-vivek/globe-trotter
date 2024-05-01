@@ -102,7 +102,7 @@ export default function Login() {
       </div>
       <div className='flex items-center justify-center mt-4'>
         <p className='mr-2'>Are you a guide ? </p>
-        <Link to={'/guide'}>
+        <Link to={'/guide/login'}>
           <span className='text-blue-600'>Guide Login</span>
         </Link>
       </div>

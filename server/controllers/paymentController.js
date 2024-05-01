@@ -1,40 +1,51 @@
-// controllers/paymentController.js
-const stripe = require('stripe')('sk_test_51Mqyu9SBO8rd4wslMRnYi0qXZN5es4PtubnJ8uyUFUhDBIsf7nVHG9wwtNQUEasEuPCAjYoTwgU1zj2NmXgbCdq500q4vepKOe');
+const mongoose = require('mongoose');
+const stripe = require("stripe")("sk_test_51Mqyu9SBO8rd4wslMRnYi0qXZN5es4PtubnJ8uyUFUhDBIsf7nVHG9wwtNQUEasEuPCAjYoTwgU1zj2NmXgbCdq500q4vepKOe");
 
-const paymentController = {
-  createCheckoutSession: async (req, res) => {
-    try {
-      const { numberOfMembers, memberDetails, selectedDate, totalAmount } = req.body;
+const Booking = require('../models/Booking');
 
-      // You can use the received data to customize the line items in the checkout session
-      const lineItems = [
-        {
-          price_data: {
-            currency: 'usd', // Replace with your desired currency code
-            product_data: {
-              name: 'Booking', // Replace with your product name
-            },
-            unit_amount: totalAmount * 100, // Stripe expects the amount in cents
+exports.createCheckoutSession = async (req, res) => {
+  const { packageDetails, userDetails, formDetails } = req.body;
+
+  // Create a booking object
+  const newBooking = new Booking({
+    package: packageDetails.name,
+    user: userDetails.id, // Assuming you have a username in userDetails
+    numberOfMembers: formDetails.numberOfMembers,
+    selectedDate: formDetails.selectedDate, // You might want to adjust this based on the actual date selection logic
+    totalAmount: formDetails.totalAmount
+  });
+
+  try {
+    // Save the booking to the database
+    await newBooking.save();
+
+    // Create line items for Stripe
+    const lineItems = [
+      {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: packageDetails.name,
           },
-          quantity: 1,
+          unit_amount: packageDetails.price * 100,
         },
-      ];
+        quantity: formDetails.numberOfMembers,
+      },
+    ];
 
-      // Create a checkout session
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items: lineItems,
-        mode: 'payment',
-        success_url: 'http://localhost:3000/thank-you', // Replace with your success URL
-        cancel_url: 'http://localhost:3000/cancel', // Replace with your cancel URL
-      });
+    // Create a checkout session with Stripe
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: lineItems,
+      mode: "payment",
+      success_url: "http://localhost:3000/success",
+      cancel_url: "http://localhost:3000/failure"
+    });
 
-      res.json({ id: session.id });
-    } catch (error) {
-      console.error('Error creating checkout session:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  },
-};
-
-module.exports = paymentController;
+    // Send the session ID and booking ID to the frontend
+    res.json(session.id);
+  } catch (error) {
+    console.error('Error creating checkout session:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
