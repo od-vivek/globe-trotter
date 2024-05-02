@@ -6,7 +6,7 @@ const { protect } = require('../middlewares/protect');
 // Update user profile
 /**
  * @swagger
- * /update/{userId}:
+ * /api/user/update/{userId}:
  *   post:
  *     summary: Update Current User
  *     tags:
@@ -45,7 +45,7 @@ router.post('/update/:userId', protect, userController.updateCurrentUser);
 // Delete user account
 /**
  * @swagger
- * /delete/{userId}:
+ * /api/user/delete/{userId}:
  *   delete:
  *     summary: Delete Current User
  *     tags:
@@ -72,7 +72,7 @@ router.delete('/delete/:userId', protect, userController.deleteUser);
 // Update user password
 /**
  * @swagger
- * /get/{userId}:
+ * /api/user/get/{userId}:
  *   get:
  *     summary: Get User by ID
  *     tags:
@@ -96,7 +96,7 @@ router.get('/get/:userId', userController.getUser);
 
 /**
  * @swagger
- * /check-password/{userId}:
+ * /api/user/check-password/{userId}:
  *   post:
  *     summary: Check User Password
  *     tags:
@@ -132,7 +132,7 @@ router.post('/check-password/:userId', userController.checkPassword);
 
 /**
  * @swagger
- * /add-to-wishlist/{userId}:
+ * /api/user/add-to-wishlist/{userId}:
  *   post:
  *     summary: Add to User Wishlist
  *     tags:
@@ -166,7 +166,7 @@ router.post('/add-to-wishlist/:userId', userController.addToWishlist);
 
 /**
  * @swagger
- * /fetch-wishlist/{userId}:
+ * /api/user/fetch-wishlist/{userId}:
  *   get:
  *     summary: Fetch User Wishlist
  *     tags:
@@ -190,7 +190,7 @@ router.get('/fetch-wishlist/:userId', userController.fetchWishlist);
 
 /**
  * @swagger
- * /delete-from-wishlist/{userId}:
+ * /api/user/delete-from-wishlist/{userId}:
  *   post:
  *     summary: Delete from User Wishlist
  *     tags:
@@ -224,7 +224,7 @@ router.post('/delete-from-wishlist/:userId', userController.deleteFromWishlist);
 
 /**
  * @swagger
- * /bookings/latest:
+ * /api/user/bookings/latest:
  *   post:
  *     summary: Get Latest Booking
  *     tags:
@@ -252,7 +252,7 @@ router.post('/bookings/latest' , userController.getLatestBooking);
 
 /**
  * @swagger
- * /bookings/{userId}:
+ * /api/user/bookings/{userId}:
  *   get:
  *     summary: Get User Bookings
  *     tags:

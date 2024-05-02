@@ -6,7 +6,7 @@ const cacheddata = require("../middlewares/Rediscache")
 // Routes for packages
 /**
  * @swagger
- * /post:
+ * /api/blog/post:
  *   post:
  *     summary: Post Blog
  *     tags:
@@ -36,7 +36,7 @@ const cacheddata = require("../middlewares/Rediscache")
 router.post('/post', blogController.postBlog);
 /**
  * @swagger
- * /get:
+ * /api/blog/get:
  *   get:
  *     summary: Fetch All Blogs
  *     tags:
@@ -50,7 +50,7 @@ router.post('/post', blogController.postBlog);
 router.get('/get', cacheddata, blogController.fetchAllBlogs);
 /**
  * @swagger
- * /guideblogs:
+ * /api/blog/guideblogs:
  *   post:
  *     summary: Fetch Blogs for a Specific Guide
  *     tags:
@@ -77,7 +77,7 @@ router.get('/get', cacheddata, blogController.fetchAllBlogs);
 router.post('/guideblogs' , blogController.fetchGuideBlogs);
 /**
  * @swagger
- * /dest-blogs:
+ * /api/blog/dest-blogs:
  *   post:
  *     summary: Fetch Blogs by Destination
  *     tags:
@@ -104,7 +104,7 @@ router.post('/guideblogs' , blogController.fetchGuideBlogs);
 router.post('/dest-blogs' , blogController.fetchBlogsByDestination);
 /**
  * @swagger
- * /{blogId}:
+ * /api/blog/{blogId}:
  *   get:
  *     summary: Fetch Blog by ID
  *     tags:

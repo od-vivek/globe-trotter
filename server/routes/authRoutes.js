@@ -21,7 +21,7 @@ const upload = multer({ storage: storage });
 // User Signup
 /**
  * @swagger
- * /signup:
+ * /api/auth/signup:
  *   post:
  *     summary: User Signup
  *     tags:
@@ -73,7 +73,7 @@ router.post(
 // User Login
 /**
  * @swagger
- * /login:
+ * /api/auth/login:
  *   post:
  *     summary: User Login
  *     tags:
@@ -128,7 +128,7 @@ router.use((req, res, next) => {
 // Guide Signup
 /**
  * @swagger
- * /guide/signup:
+ * /api/auth/guide/signup:
  *   post:
  *     summary: Guide Signup
  *     tags:
@@ -171,7 +171,7 @@ router.post(
 // Guide Login
 /**
  * @swagger
- * /guide/login:
+ * /api/auth/guide/login:
  *   post:
  *     summary: Guide Login
  *     tags:
@@ -206,7 +206,7 @@ router.post(
 // Other authentication routes
 /**
  * @swagger
- * /google:
+ * /api/auth/google:
  *   post:
  *     summary: Google Authentication
  *     tags:
@@ -222,7 +222,7 @@ router.post(
 router.post('/google', authController.google);
 /**
  * @swagger
- * /logout:
+ * /api/auth/logout:
  *   get:
  *     summary: User Logout
  *     tags:

@@ -10,7 +10,7 @@ const path = require('path');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: ["https://globe-trotter-private.vercel.app/"],
+    origin: ["http://localhost:3000"],
     methods: ['POST', 'GET', 'HEAD', 'PUT', 'DELETE'],
     credentials: true
 }))
@@ -70,3 +70,5 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}!`);
 });
+
+module.exports = app

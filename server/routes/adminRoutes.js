@@ -7,7 +7,7 @@ const adminController = require('../controllers/adminController');
 
 /**
  * @swagger
- * /packages:
+ * /api/admin/packages:
  *   post:
  *     summary: Add a new package
  *     tags:
@@ -23,6 +23,11 @@ const adminController = require('../controllers/adminController');
  *         description: Package created successfully
  *       '500':
  *         description: Internal server error
+*/
+router.post('/packages' , adminController.addPackage);
+
+/**
+ * /api/admin/packages/{packageId}:
  *   put:
  *     summary: Update an existing package
  *     tags:
@@ -43,43 +48,45 @@ const adminController = require('../controllers/adminController');
  *         description: Package updated successfully
  *       '500':
  *         description: Internal server error
- * /packages/{packageId}:
- *   delete:
- *     summary: Delete a package
- *     tags:
- *       - Packages
- *     parameters:
- *       - in: path
- *         name: packageId
- *         required: true
- *         type: string
- *         description: The ID of the package to delete
- *     responses:
- *       '200':
- *         description: Package deleted successfully
- *       '500':
- *         description: Internal server error
- * definitions:
- *   Package:
- *     type: object
- *     properties:
- *       name:
- *         type: string
- *       description:
- *         type: string
- *       price:
- *         type: number
- *       guide:
- *         type: string
  */
-router.post('/packages' , adminController.addPackage);
 router.delete('/packages/:packageId', adminController.deletePackage);
+
+/**
+* /api/admin/packages/{packageId}:
+*   delete:
+*     summary: Delete a package
+*     tags:
+*       - Packages
+*     parameters:
+*       - in: path
+*         name: packageId
+*         required: true
+*         type: string
+*         description: The ID of the package to delete
+*     responses:
+*       '200':
+*         description: Package deleted successfully
+*       '500':
+*         description: Internal server error
+* definitions:
+*   Package:
+*     type: object
+*     properties:
+*       name:
+*         type: string
+*       description:
+*         type: string
+*       price:
+*         type: number
+*       guide:
+*         type: string
+*/
 router.put('/packages/:packageId', adminController.updatePackage);
 // Routes for destinations
 
 /**
  * @swagger
- * /destinations:
+ * /api/admin/destinations:
  *   post:
  *     summary: Add a new destination
  *     tags:
@@ -95,7 +102,11 @@ router.put('/packages/:packageId', adminController.updatePackage);
  *         description: Destination created successfully
  *       '500':
  *         description: Internal server error
- * /destinations/{destinationId}:
+ */
+router.post('/destinations', adminController.addDestination);
+
+/**
+ * /api/admin/destinations/{destinationId}:
  *   delete:
  *     summary: Delete a destination
  *     tags:
@@ -122,12 +133,11 @@ router.put('/packages/:packageId', adminController.updatePackage);
  *       location:
  *         type: string
  */
-router.post('/destinations', adminController.addDestination);
 router.delete('/destinations/:destinationId',  adminController.deleteDestination);
 
 /**
  * @swagger
- * /create-admin:
+ * /api/admin/create-admin:
  *   post:
  *     summary: Create a new admin user
  *     tags:
@@ -158,7 +168,7 @@ router.post('/create-admin', adminController.createAdminUser);
 // get routes
 /**
  * @swagger
- * /destinations:
+ * /api/admin/destinations:
  *   get:
  *     summary: Get all destinations
  *     tags:
@@ -173,7 +183,7 @@ router.get('/destinations', adminController.getDestinations);
 
 /**
  * @swagger
- * /packages:
+ * /api/admin/packages:
  *   get:
  *     summary: Get all packages
  *     tags:
@@ -188,7 +198,7 @@ router.get('/packages', adminController.getPackages)
 
 /**
  * @swagger
- * /packages/{guideId}:
+ * /api/admin/packages/{guideId}:
  *   get:
  *     summary: Get all packages for a specific guide
  *     tags:
@@ -209,7 +219,7 @@ router.get('/packages/:guideId', adminController.getGuidePackages)
 
 /**
  * @swagger
- * /blogs:
+ * /api/admin/blogs:
  *   get:
  *     summary: Get all blogs
  *     tags:
@@ -223,7 +233,7 @@ router.get('/packages/:guideId', adminController.getGuidePackages)
 router.get('/blogs', adminController.getBlogs)
 /**
  * @swagger
- * /users:
+ * /api/admin/users:
  *   get:
  *     summary: Get all users
  *     tags:
@@ -239,7 +249,7 @@ router.get('/users', adminController.getUsers)
 
 /**
  * @swagger
- * /guides:
+ * /api/admin/guides:
  *   get:
  *     summary: Get all guides
  *     tags:
@@ -254,7 +264,7 @@ router.get('/guides', adminController.getGuides)
 
 /**
  * @swagger
- * /blogs/{id}:
+ * /api/admin/blogs/{id}:
  *   delete:
  *     summary: Delete a blog
  *     tags:
@@ -275,7 +285,7 @@ router.delete('/blogs/:id', adminController.deleteBlogs)
 
 /**
  * @swagger
- * /users/{userId}:
+ * /api/admin/users/{userId}:
  *   delete:
  *     summary: Delete a user
  *     tags:
@@ -296,7 +306,7 @@ router.delete('/users/:userId', adminController.deleteUser)
 
 /**
  * @swagger
- * /guides/{guideId}:
+ * /api/admin/guides/{guideId}:
  *   delete:
  *     summary: Delete a guide
  *     tags:
@@ -317,7 +327,7 @@ router.delete('/guides/:guideId', adminController.deleteGuide)
 
 /**
  * @swagger
- * /packages-for-graph:
+ * /api/admin/packages-for-graph:
  *   get:
  *     summary: Get all packages for graph
  *     tags:
@@ -332,7 +342,7 @@ router.get('/packages-for-graph' , adminController.getPackagesForGraph);
 
 /**
  * @swagger
- * /active-users-count:
+ * /api/admin/active-users-count:
  *   get:
  *     summary: Get count of active users
  *     tags:
@@ -347,7 +357,7 @@ router.get('/active-users-count' , adminController.getActiveUsers);
 
 /**
  * @swagger
- * /active-packages-counter:
+ * /api/admin/active-packages-counter:
  *   get:
  *     summary: Get count of active packages
  *     tags:
@@ -362,7 +372,7 @@ router.get('/active-packages-counter' , adminController.getActivePackages);
 
 /**
  * @swagger
- * /updates:
+ * /api/admin/updates:
  *   get:
  *     summary: Fetch updates
  *     tags:
@@ -377,7 +387,7 @@ router.get('/updates' , adminController.fetchUpdates);
 
 /**
  * @swagger
- * /updates/{guideId}:
+ * /api/admin/updates/{guideId}:
  *   get:
  *     summary: Fetch updates for a specific guide
  *     tags:
@@ -398,7 +408,7 @@ router.get('/updates/:guideId', adminController.fetchGuideUpdates);
 
 /**
  * @swagger
- * /guide-updates:
+ * /api/admin/guide-updates:
  *   get:
  *     summary: Fetch revenue updates for all guides
  *     tags:

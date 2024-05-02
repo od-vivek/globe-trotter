@@ -5,7 +5,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /send-confirmation-email:
+ * /api/send-confirmation-email:
  *   post:
  *     summary: Send Confirmation Email
  *     tags:

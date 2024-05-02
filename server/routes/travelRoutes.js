@@ -5,7 +5,7 @@ const travelController = require('../controllers/travelController');
 // Define a route for displaying destinations with dynamic pagination
 /**
  * @swagger
- * /destinations:
+ * /api/get/destinations:
  *   get:
  *     summary: Fetch All Destinations
  *     tags:
@@ -19,7 +19,7 @@ const travelController = require('../controllers/travelController');
 router.get('/destinations', travelController.getDestinations);
 /**
  * @swagger
- * /package/{packageId}:
+ * /api/get/package/{packageId}:
  *   get:
  *     summary: Fetch Package by ID
  *     tags:
@@ -42,7 +42,7 @@ router.get('/destinations', travelController.getDestinations);
 router.get('/package/:packageId', travelController.getPackage);
 /**
  * @swagger
- * /packages/{destinationName}:
+ * /api/get/packages/{destinationName}:
  *   get:
  *     summary: Fetch Packages by Destination Name
  *     tags:
@@ -65,7 +65,7 @@ router.get('/package/:packageId', travelController.getPackage);
 router.get('/packages/:destinationName', travelController.getPackages);
 /**
  * @swagger
- * /packages/review/{packageId}:
+ * /api/get/packages/review/{packageId}:
  *   post:
  *     summary: Add Review to Package
  *     tags:
@@ -101,7 +101,7 @@ router.get('/packages/:destinationName', travelController.getPackages);
 router.post('/packages/review/:packageId', travelController.addReview);
 /**
  * @swagger
- * /:
+ * /api/get/:
  *   get:
  *     summary: Search Packages
  *     tags:
@@ -133,7 +133,7 @@ router.post('/packages/review/:packageId', travelController.addReview);
 router.get('/', travelController.searchPackages);
 /**
  * @swagger
- * /guide:
+ * /api/get/guide:
  *   post:
  *     summary: Fetch Guide Details
  *     tags:

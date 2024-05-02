@@ -7,7 +7,7 @@ const router = express.Router();
 // Define payment routes
 /**
  * @swagger
- * /create-checkout-session:
+ * /api/payment/create-checkout-session:
  *   post:
  *     summary: Create Checkout Session
  *     tags:
