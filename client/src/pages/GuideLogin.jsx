@@ -6,6 +6,7 @@ import logo from '../images/logo.png';
 import app from '../firebase'; // Import your Firebase app instance
 import { GoogleAuthProvider } from 'firebase/auth'; // Import GoogleAuthProvider separately
 import { getAuth, signInWithPopup } from 'firebase/auth'; // Import getAuth and signInWithPopup separately
+import baseurl from '../api/baseurl';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export default function Login() {
     try {
       dispatch(signInStart());
 
-      const response = await fetch('/api/auth/guide/login', {
+      const response = await fetch(baseurl + '/api/auth/guide/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

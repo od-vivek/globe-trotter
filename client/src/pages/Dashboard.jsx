@@ -12,6 +12,7 @@ import {
 } from '../redux/user/userSlice';
 import { resetError } from '../redux/user/userSlice';
 import BookingHistory from '../components/BookingHistory';
+import baseurl from '../api/baseurl';
 
 const Dashboard = () => {
     const dispatch = useDispatch();
@@ -46,7 +47,7 @@ const Dashboard = () => {
             setLoading(true);
             dispatch(signoutUserStart());
 
-            const response = await fetch('/api/auth/logout', {
+            const response = await fetch(baseurl + '/api/auth/logout', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -70,7 +71,7 @@ const Dashboard = () => {
 
     const handleDeleteAccount = async () => {
         try {
-            const response = await fetch(`/api/user/delete/${currentUser._id}`, {
+            const response = await fetch(baseurl + `/api/user/delete/${currentUser._id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,7 +118,7 @@ const Dashboard = () => {
             let passwordCheckResponse;
 
             if (formData.newPassword) {
-                passwordCheckResponse = await fetch(`/api/user/check-password/${currentUser._id}`, {
+                passwordCheckResponse = await fetch(baseurl + `/api/user/check-password/${currentUser._id}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -149,7 +150,7 @@ const Dashboard = () => {
                 requestBody.currentPassword = formData.password;
             }
 
-            const response = await fetch(`/api/user/update/${currentUser._id}`, {
+            const response = await fetch(baseurl + `/api/user/update/${currentUser._id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

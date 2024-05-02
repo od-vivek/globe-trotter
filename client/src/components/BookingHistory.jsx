@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import baseurl from '../api/baseurl';
 
 const BookingHistory = () => {
     const [bookings, setBookings] = useState([]);
@@ -11,7 +12,7 @@ const BookingHistory = () => {
     useEffect(() => {
         const fetchBookings = async () => {
             try {
-                const response = await fetch(`/api/user/bookings/${currentUser._id}`);
+                const response = await fetch(baseurl + `/api/user/bookings/${currentUser._id}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch bookings');
                 }

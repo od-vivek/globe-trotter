@@ -6,6 +6,7 @@ import Packages from '../components/Packages';
 import { useSelector } from 'react-redux';
 import { Icon } from 'leaflet';
 import { Link } from 'react-router-dom';
+import baseurl from '../api/baseurl';
 
 const createCustomIcon = () =>
     new Icon({
@@ -29,7 +30,7 @@ const DestinationMap = () => {
         const dest = destinationName;
         console.log("clicked");
         try {
-            const response = await fetch(`/api/user/add-to-wishlist/${currentUser._id}`, {
+            const response = await fetch(baseurl + `/api/user/add-to-wishlist/${currentUser._id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,7 +54,7 @@ const DestinationMap = () => {
     useEffect(() => {
         const fetchBlogsForKeyword = async (keyword) => {
             try {
-                const response = await fetch('/api/blog/dest-blogs', {
+                const response = await fetch(baseurl + '/api/blog/dest-blogs', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

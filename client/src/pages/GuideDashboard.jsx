@@ -6,6 +6,8 @@ import 'swiper/css/bundle';
 import { useSelector} from 'react-redux';  // Import useDispatch for Redux actions
 import { Bar } from 'react-chartjs-2';
 import axios from 'axios';
+import Chart from 'chart.js/auto';
+import baseurl from '../api/baseurl';
 
 export default function Home() {
   SwiperCore.use([Navigation]);
@@ -17,7 +19,7 @@ export default function Home() {
     useEffect(() => {
         const fetchGuideUpdates = async () => {
             try {
-                const response = await axios.get(`/api/admin/updates/${guideId}`);
+                const response = await axios.get(baseurl + `/api/admin/updates/${guideId}`);
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching updates:', error);
@@ -33,7 +35,7 @@ export default function Home() {
         if (!currentUser) {
           return;
         }
-        const response = await fetch('/api/blog/guideblogs', {
+        const response = await fetch(baseurl + '/api/blog/guideblogs', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

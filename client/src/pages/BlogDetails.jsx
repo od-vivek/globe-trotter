@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import ContactUs from '../components/ContactUs';
+import baseurl from '../api/baseurl';
 
 export default function BlogDetails() {
   const { blogId } = useParams();
@@ -12,11 +13,11 @@ export default function BlogDetails() {
     console.log(guideDetails);
     const fetchBlogDetails = async () => {
       try {
-        const response = await fetch(`/api/blog/${blogId}`);
+        const response = await fetch(baseurl + `/api/blog/${blogId}`);
         const data = await response.json();
         setBlog(data.blog);
         // Fetch guide details using the guideName from the blog
-        const guideResponse = await fetch(`/api/get/guide`, {
+        const guideResponse = await fetch(baseurl + `/api/get/guide`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

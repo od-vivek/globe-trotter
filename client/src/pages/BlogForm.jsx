@@ -8,6 +8,7 @@ import {
   resetError
 } from '../redux/user/userSlice';
 import logo from '../images/logo.png';
+import baseurl from '../api/baseurl';
 
 export default function BlogForm() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ export default function BlogForm() {
       dispatch(postBlogStart());
       // Assuming `currentUser` has a property `guideId`
       const guideName  = currentUser.name;
-      const response = await fetch('http://localhost:5000/api/blog/post', {
+      const response = await fetch(baseurl + '/api/blog/post', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

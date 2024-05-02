@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import logo from '../images/logo.png';
 import { loadStripe } from '@stripe/stripe-js';
+import baseurl from '../api/baseurl';
 
 const ConfirmPaymentPage = () => {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ const ConfirmPaymentPage = () => {
     // Fetch package details only once
     const fetchPackageDetails = async () => {
       try {
-        const response = await fetch(`/api/get/package/${packageId}`);
+        const response = await fetch(baseurl + `/api/get/package/${packageId}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -146,7 +147,7 @@ const ConfirmPaymentPage = () => {
 
   //     try {
   //       // Send data to the server
-  //       const response = await fetch('/api/send-confirmation-email', {
+  //       const response = await fetch(baseurl + '/api/send-confirmation-email', {
   //         method: 'POST',
   //         headers: {
   //           'Content-Type': 'application/json',
@@ -195,7 +196,7 @@ const ConfirmPaymentPage = () => {
         },
       };
       // Send data to the server
-      const response = await fetch('/api/payment/create-checkout-session', {
+      const response = await fetch(baseurl + '/api/payment/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

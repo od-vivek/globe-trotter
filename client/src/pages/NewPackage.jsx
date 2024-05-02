@@ -6,13 +6,14 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import UpdatePackageForm from "../components/UpdatePackageForm";
+import baseurl from '../api/baseurl';
 
 const PackageCard = ({ packageDetails, isPackageChanged, setIsPackageChanged, isPackage }) => {
     const [openUpdateModal, setOpenUpdateModal] = useState(false);
 
     const handleUpdate = async (id, updatedPackageData) => {
         try {
-          await axios.put(`/api/admin/${isPackage ? "packages" : "destinations"}/${id}`, updatedPackageData);
+          await axios.put(baseurl + `/api/admin/${isPackage ? "packages" : "destinations"}/${id}`, updatedPackageData);
           setIsPackageChanged(!isPackageChanged);
         } catch (error) {
           console.error("Error updating package:", error);
@@ -74,7 +75,7 @@ const PackageList = () => {
               url += `/${guideId}`;
             }
             console.log("URL:", url); 
-            const res = await axios.get(url);
+            const res = await axios.get(baseurl + url);
             console.log("Response:", res);
             if (res?.status === 200) {
               setPackages(res?.data);

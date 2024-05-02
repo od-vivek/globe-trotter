@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import UserCard from './UserCard';
+import baseurl from '../api/baseurl';
 
 const UserList = () => {
 
@@ -8,7 +9,7 @@ const UserList = () => {
     const [isUserChanged, setIsUserChanged] = useState(false)
     useEffect(()=> {
         const fetchData = async()=>{
-            const res = await axios.get("/api/admin/users")
+            const res = await axios.get(baseurl + "/api/admin/users")
             if(res?.status === 200){
                 setUsers(res?.data)
             }

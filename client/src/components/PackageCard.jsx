@@ -3,10 +3,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
+import baseurl from '../api/baseurl';
 
 const PackageCard = ({ packageDetails, isPackageChanged, setIsPackageChanged, isPackage }) => {
   const deleteHandler = async (id) => {
-    const res = await axios.delete(`/api/admin/${isPackage ? "packages" : "destinations"}/${id}`);
+    const res = await axios.delete(baseurl + `/api/admin/${isPackage ? "packages" : "destinations"}/${id}`);
     if (res?.status === 200) {
       setIsPackageChanged(!isPackageChanged);
     }

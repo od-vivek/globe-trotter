@@ -6,6 +6,7 @@ import { Navigation } from 'swiper/modules';
 import SwiperCore from 'swiper';
 import 'swiper/css/bundle';
 import { useSelector } from 'react-redux';
+import baseurl from '../api/baseurl';
 
 export default function Home() {
   SwiperCore.use([Navigation]);
@@ -20,7 +21,7 @@ export default function Home() {
 
   const fetchDestinations = async () => {
     try {
-      const res = await fetch(`/api/get/destinations?destinationsPerPage=6&page=${currentPage}`);
+      const res = await fetch(baseurl + `/api/get/destinations?destinationsPerPage=6&page=${currentPage}`);
       const data = await res.json();
 
       // Clear destinations when fetching the first page
@@ -39,7 +40,7 @@ export default function Home() {
 
   const fetchTotalBlogs = async () => {
     try {
-      const response = await fetch('/api/blog/get');
+      const response = await fetch(baseurl + '/api/blog/get');
       const data = await response.json();
       setTotalBlogs(data.blogs);
     } catch (error) {

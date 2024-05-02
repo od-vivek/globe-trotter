@@ -2,10 +2,11 @@ import { IconButton, Typography } from '@mui/material';
 import React from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
+import baseurl from '../api/baseurl';
 
 const UserCard = ({ userDetails, isUserChanged, setIsUserChanged}) => {
   const deleteHandler = async (id) => {
-    const res = await axios.delete(`/api/admin/users/${id}`);
+    const res = await axios.delete(baseurl + `/api/admin/users/${id}`);
     if (res?.status === 200) {
       setIsUserChanged(!isUserChanged);
     }

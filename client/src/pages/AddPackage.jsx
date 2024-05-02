@@ -3,6 +3,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Typography, TextField, Button, Grid } from "@mui/material";
+import baseurl from "../api/baseurl";
 
 const AddPackage = ({ isPackageChanged, setIsPackageChanged }) => {
   const user = useSelector((state) => state.user.currentUser);
@@ -38,7 +39,7 @@ const AddPackage = ({ isPackageChanged, setIsPackageChanged }) => {
 
   const handleSubmit = async () => {
     try {
-      await axios.post("/api/admin/packages", newPackageData);
+      await axios.post(baseurl + "/api/admin/packages", newPackageData);
       setIsPackageChanged(!isPackageChanged);
       setTimeout(() => {
         setNewPackageData({

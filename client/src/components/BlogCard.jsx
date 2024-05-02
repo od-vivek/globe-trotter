@@ -3,10 +3,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
+import baseurl from '../api/baseurl';
 
 const BlogCard = ({ blog, isBlogChanged, setIsBlogChanged }) => {
   const deleteHandler = async (id) => {
-    const res = await axios.delete(`/api/admin/blogs/${id}`);
+    const res = await axios.delete(baseurl + `/api/admin/blogs/${id}`);
     if (res?.status === 200) {
       setIsBlogChanged(!isBlogChanged);
     }

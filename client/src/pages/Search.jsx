@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PackageItem from '../components/PackageItem';
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import baseurl from '../api/baseurl';
 
 export default function Search() {
   const location = useLocation();
@@ -15,7 +16,7 @@ export default function Search() {
     console.log(searchTermFromUrl);
     const fetchSearchResults = async () => {
       try {
-        const response = await fetch(`/api/get?searchTerm=${searchTermFromUrl}`);
+        const response = await fetch(baseurl + `/api/get?searchTerm=${searchTermFromUrl}`);
         const data = await response.json();
 
         if (data.success) {

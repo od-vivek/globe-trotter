@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ContactUs from '../components/ContactUs';
+import baseurl from '../api/baseurl';
 
 const Success = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -11,7 +12,7 @@ const Success = () => {
   useEffect(() => {
     const fetchLatestBooking = async () => {
       try {
-        const response = await fetch('/api/user/bookings/latest', {
+        const response = await fetch(baseurl + '/api/user/bookings/latest', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

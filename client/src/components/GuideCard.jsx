@@ -2,10 +2,11 @@ import { IconButton, Typography } from '@mui/material';
 import React from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
+import baseurl from '../api/baseurl';
 
 const GuideCard = ({ guideDetails, isGuideChanged, setIsGuideChanged}) => {
   const deleteHandler = async (id) => {
-    const res = await axios.delete(`/api/admin/guides/${id}`);
+    const res = await axios.delete(baseurl + `/api/admin/guides/${id}`);
     if (res?.status === 200) {
       setIsGuideChanged(!isGuideChanged);
     }

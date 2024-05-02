@@ -8,6 +8,7 @@ import { FaMapMarkerAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ReviewForm from '../components/ReviewForm';
+import baseurl from '../api/baseurl';
 
 const PackageDetails = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const PackageDetails = () => {
   useEffect(() => {
     const fetchPackageDetails = async () => {
       try {
-        const response = await fetch(`/api/get/package/${packageId}`);
+        const response = await fetch(baseurl + `/api/get/package/${packageId}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -54,7 +55,7 @@ const PackageDetails = () => {
         await Promise.all(
           packageDetails.reviews.map(async (review) => {
             if (!updatedUsernames[review.user.username]) {
-              const response = await fetch(`/api/user/get/${review.user}`);
+              const response = await fetch(baseurl + `/api/user/get/${review.user}`);
               const data = await response.json();
 
               if (response.ok) {
@@ -83,7 +84,7 @@ const PackageDetails = () => {
 
   const addReviewHandler = async (reviewContent) => {
     try {
-      const response = await fetch(`/api/get/packages/review/${packageId}`, {
+      const response = await fetch(baseurl + `/api/get/packages/review/${packageId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

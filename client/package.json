@@ -61,6 +61,5 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.3.5"
-  },
-  "proxy": "https://globe-trotter-private.onrender.com"
+  }
 }

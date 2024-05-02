@@ -12,6 +12,7 @@ import logo from '../images/logo.png';
 import app from '../firebase';
 import { GoogleAuthProvider } from 'firebase/auth';
 import { getAuth, signInWithPopup } from 'firebase/auth';
+import baseurl from '../api/baseurl';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export default function Signup() {
     event.preventDefault();
     try {
       dispatch(signUpStart());
-      const res = await fetch('/api/auth/signup', {
+      const res = await fetch(baseurl + '/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -71,7 +72,7 @@ export default function Signup() {
       const auth = getAuth(app);
 
       const result = await signInWithPopup(auth, provider);
-      const res = await fetch('/api/auth/google', {
+      const res = await fetch(baseurl + '/api/auth/google', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

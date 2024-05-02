@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import baseurl from '../api/baseurl';
 
 const BlogList = () => {
   const [totalBlogs, setTotalBlogs] = useState([]);
@@ -11,7 +12,7 @@ const BlogList = () => {
     // console.log(currentUser);
     const fetchTotalBlogs = async () => {
       try {
-        const response = await fetch('/api/blog/get');
+        const response = await fetch(baseurl + '/api/blog/get');
         const data = await response.json();
         setTotalBlogs(data.blogs);
       } catch (error) {
@@ -25,7 +26,7 @@ const BlogList = () => {
         if (!currentUser) {
           return;
         }
-        const response = await fetch('/api/blog/guideblogs', {
+        const response = await fetch(baseurl + '/api/blog/guideblogs', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

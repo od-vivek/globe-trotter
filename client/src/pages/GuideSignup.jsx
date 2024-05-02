@@ -10,6 +10,7 @@ import {
   signInSuccess,
 } from '../redux/user/userSlice';
 import logo from '../images/logo.png';
+import baseurl from '../api/baseurl';
 
 // GuideSignup component
 export default function GuideSignup() {
@@ -49,7 +50,7 @@ export default function GuideSignup() {
         formDataObject.append(key, formData[key]);
       }
       console.log(formDataObject);
-      const res = await fetch('/api/auth/guide/signup', {
+      const res = await fetch(baseurl + '/api/auth/guide/signup', {
         method: 'POST',
         body: formDataObject,  // Use the FormData object here
       });

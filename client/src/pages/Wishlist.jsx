@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import baseurl from '../api/baseurl';
 
 const WishlistComponent = () => {
     const [wishlist, setWishlist] = useState([]);
@@ -16,7 +17,7 @@ const WishlistComponent = () => {
         try {
             const userId = currentUser._id;
 
-            const response = await fetch(`/api/user/delete-from-wishlist/${userId}`, {
+            const response = await fetch(baseurl + `/api/user/delete-from-wishlist/${userId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -40,7 +41,7 @@ const WishlistComponent = () => {
     useEffect(() => {
         const fetchWishlist = async () => {
             try {
-                const response = await fetch(`/api/user/fetch-wishlist/${currentUser._id}`);
+                const response = await fetch(baseurl + `/api/user/fetch-wishlist/${currentUser._id}`);
                 const data = await response.json();
                 setWishlist(data.wishlist);
             } catch (error) {

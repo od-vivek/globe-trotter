@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { Bar, Pie } from 'react-chartjs-2';
 import moment from 'moment';
+import Chart from 'chart.js/auto';
+import baseurl from '../api/baseurl';
 
 const AdminDashboard = () => {
     const [data, setData] = useState({});
@@ -12,7 +14,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchUpdates = async () => {
             try {
-                const response = await axios.get('/api/admin/updates');
+                const response = await axios.get(baseurl + '/api/admin/updates');
                 setData(response.data);
                 let hold = [];
 
@@ -46,7 +48,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchGuideRevenue = async () => {
             try {
-                const response = await axios.get(`/api/admin/guide-updates`);
+                const response = await axios.get(baseurl + `/api/admin/guide-updates`);
                 setGuideData(response.data);
             } catch (error) {
                 console.error('Error fetching updates:', error);

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import GuideCard from './GuideCard';
+import baseurl from '../api/baseurl';
 
 const GuidesList = () => {
 
@@ -8,7 +9,7 @@ const GuidesList = () => {
     const [isGuideChanged, setIsGuideChanged] = useState(false)
     useEffect(()=> {
         const fetchData = async()=>{
-            const res = await axios.get("/api/admin/guides")
+            const res = await axios.get(baseurl + "/api/admin/guides")
             if(res?.status === 200){
                 setGuides(res?.data)
             }

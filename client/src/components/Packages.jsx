@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import PackageItem from './PackageItem';
+import baseurl from '../api/baseurl';
 
 export default function Packages() {
     const [packages, setPackages] = useState([]);
@@ -12,7 +13,7 @@ export default function Packages() {
     useEffect(() => {
         const fetchPackages = async () => {
             try {
-                const response = await fetch(`/api/get/packages/${destinationName}`);
+                const response = await fetch(baseurl + `/api/get/packages/${destinationName}`);
                 if (!response.ok) {
                     throw new Error(`Error ${response.status}: ${response.statusText}`);
                 }
@@ -40,7 +41,7 @@ export default function Packages() {
     return (
         <div className='flex-1'>
             <div className='p-7 flex flex-wrap gap-4'>
-                {packages.map((dest_package) => (
+                {packages && packages.map((dest_package) => (
                     <PackageItem key={dest_package._id} dest_package={dest_package} />
                 ))}
             </div>

@@ -1,13 +1,14 @@
 import React, {useState, useEffect} from 'react'
 import PackageCard from './PackageCard';
 import axios from 'axios';
+import baseurl from '../api/baseurl';
 
 const DestinationList = () => {
   const [packages, setPackages] = useState([]);
     const [isPackageChanged, setIsPackageChanged] = useState(false)
     useEffect(()=> {
         const fetchData = async()=>{
-            const res = await axios.get("/api/admin/destinations")
+            const res = await axios.get(baseurl + "/api/admin/destinations")
             if(res?.status === 200){
                 setPackages(res?.data)
             }
